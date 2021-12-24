@@ -11,12 +11,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
+@ToString
 @Document(collection="TimesheetManagementDB")
 public class TimesheetRecord implements Serializable {
 	
