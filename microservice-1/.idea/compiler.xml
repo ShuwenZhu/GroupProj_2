@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="week9day4composite" />
+        <module name="week9day4housing" />
+        <module name="week9day4eureka" />
+        <module name="week9day4gateway" />
+        <module name="week9day4user" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="week9day4composite" target="1.8" />
+      <module name="week9day4eureka" target="1.8" />
+      <module name="week9day4gateway" target="1.8" />
+      <module name="week9day4housing" target="1.8" />
+      <module name="week9day4user" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="week9day4composite" options="-parameters" />
+      <module name="week9day4eureka" options="-parameters" />
+      <module name="week9day4gateway" options="-parameters" />
+      <module name="week9day4housing" options="-parameters" />
+      <module name="week9day4user" options="-parameters" />
+    </option>
+  </component>
+</project>

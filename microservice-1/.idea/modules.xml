@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/microservice-1.iml" filepath="$PROJECT_DIR$/.idea/microservice-1.iml.iml" />
+      <module fileurl="file://$PROJECT_DIR$/week9day4composite/week9day4composite.iml" filepath="$PROJECT_DIR$/week9day4composite/week9day4composite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/week9day4eureka/week9day4eureka.iml" filepath="$PROJECT_DIR$/week9day4eureka/week9day4eureka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/week9day4gateway/week9day4gateway.iml" filepath="$PROJECT_DIR$/week9day4gateway/week9day4gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/week9day4housing/week9day4housing.iml" filepath="$PROJECT_DIR$/week9day4housing/week9day4housing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/week9day4user/week9day4user.iml" filepath="$PROJECT_DIR$/week9day4user/week9day4user.iml" />
+    </modules>
+  </component>
+</project>
