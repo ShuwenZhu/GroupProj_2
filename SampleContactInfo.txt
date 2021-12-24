@@ -1,0 +1,13 @@
+{
+   "id":0,
+   "avatar":"AvatarAddr",
+   "phoneNumber":"987-654-321",
+   "addr":"AddrInfo",
+   "emergencyContact":[
+      {
+         "firstName":"fname",
+         "lastName":"lname",
+         "contactNumber":"000-000-0000"
+      }
+   ]
+}
