@@ -7,13 +7,11 @@ import userService from "./services/UserService";
 
 
 function Routes() {
-  let user = useSelector((state)=> state.user);
-  if (user.length == 0)
-  {
-    console.log("not logged in")
-    userService.fetchUser()
-  } else
-    console.log(user)
+  // const userlist = useSelector((state)=>state.user)
+  // if (userlist.length == 0)
+  // {
+  //   userService.fetchUser()
+  // }
   let routes = useRoutes([
     { path: "/", element: <Summary /> },
     { path: "summary", element: <Summary />},

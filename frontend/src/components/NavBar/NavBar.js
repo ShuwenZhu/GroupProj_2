@@ -1,10 +1,12 @@
 import { Navbar, Container } from 'react-bootstrap';
 import React, { Component } from 'react'
 import UserService from "../../services/UserService";
+import {store} from "../../redux/store";
+import {useSelector} from "react-redux";
+import userService from "../../services/UserService";
 
 class NavBar extends Component {
     render() {
-        // UserService.fetchUser().then((response) => console.log('query executed'));
         return (
             <>
                 <link
@@ -18,7 +20,7 @@ class NavBar extends Component {
                       <Navbar.Brand href="/summary">Summary</Navbar.Brand>
                       <Navbar.Brand href="/timesheet">Timesheet</Navbar.Brand>
                       <Navbar.Brand href="/profile">Profile</Navbar.Brand>
-                      <Navbar.Brand href="/" onClick={() =>UserService.logout()}>Log Out</Navbar.Brand>
+                      <Navbar.Brand href='http://localhost:9999/logout'> Log Out</Navbar.Brand>
                     </Container>
                   </Navbar>
                   <br></br>
