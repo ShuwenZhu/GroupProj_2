@@ -1,0 +1,19 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Contributor: Swann Zhu",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShuwenZhu/GroupProj_2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShuwenZhu/GroupProj_2/issues"
+  },
+  "homepage": "https://github.com/ShuwenZhu/GroupProj_2#readme"
+}
