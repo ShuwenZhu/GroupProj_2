@@ -1,10 +1,16 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:9000/';
+const API_BASE_URL = 'http://localhost:9000/timesheet/';
+
+const transport = axios.create({
+    withCredentials: true
+})
 class ApiService {
-    fetchSummary(numberOfSummary){
-        // return fetch(API_BASE_URL + 'posts').then((response) => response.json());
-        return axios.get(API_BASE_URL + 'summary-service/getSummary/' + numberOfSummary);
+    fetchTimesheet(userId){
+        // console.log(userId);
+        return transport
+        .get(API_BASE_URL + 'getUserWEByUserId?userId=' + userId)
+        .catch(err => { window.location.href = API_BASE_URL })
     }
 
 }

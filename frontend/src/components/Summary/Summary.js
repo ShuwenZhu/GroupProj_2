@@ -1,6 +1,8 @@
 import { Table, Button } from 'react-bootstrap';
 import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar';
+import SummaryService from '../../services/SummaryService';
+// import {useSelector} from "react-redux";
 
 class Summary extends Component {
     constructor(props) {
@@ -9,20 +11,20 @@ class Summary extends Component {
         this.state = {
             data: [],
             numberOfSummary: 5,
+            // sorted_date: [],
         }
+        
     }
     componentDidMount() {
-        // need to create service for 5 recent information
-        // ApiService.fetchSummary(this.state.numberOfSummary).then((response) => this.setState({ data: response.data }));
+        SummaryService.fetchTimesheet(1).then((response) => this.setState({ data: response.data }));
+        
     }
     showMore(){
         this.setState({numberOfSummary: this.state.numberOfSummary + 5});
-        console.log(this.state.numberOfSummary);
-        // ApiService.fetchSummary(this.state.numberOfSummary).then((response) => this.setState({ data: response.data }));
-        //idea = once we click the button, the show value will add up to 5. 
-        //Later, we can use fetch(show-value) to display the number of the recent week ending.
     }
     render() {
+        this.state.data.sort((oldDate, newDate) => new Date(...oldDate.weekEnding.split('/')) - new Date(...newDate.weekEnding.split('/'))).reverse();
+        console.log(this.state.data);
         return (
             <>
                 <NavBar></NavBar>
@@ -38,39 +40,15 @@ class Summary extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* hard coded for now... need something like 
-                        
-                        {this.state.data.map(p => 
-                        <tr key={p.hardness}>
-                            <td>{p.name}</td>...
+                        {this.state.data.slice(0, this.state.numberOfSummary).map(p => 
+                        <tr key={p.weekEnding}>
+                            <td>{p.weekEnding}</td>
+                            <td>{p.compensatedHour}</td>
+                            <td>{p.submissionStatus}</td>
+                            <td>{p.approvalStatus}</td>
+                            <td>Edit</td>
+                            <td></td>
                         </tr>)}
-                        
-                        later
-                        */}
-                        <tr>
-                            <td>12/17/2021</td>
-                            <td>40</td>
-                            <td>Not Started</td>
-                            <td>N/A</td>
-                            <td>Edit</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>12/10/2021</td>
-                            <td>32</td>
-                            <td>Incomplete</td>
-                            <td>Not approved</td>
-                            <td>Edit</td>
-                            <td>1 Floating Day Required</td>
-                        </tr>
-                        <tr>
-                            <td>12/03/2021</td>
-                            <td>40</td>
-                            <td>Complete</td>
-                            <td>Not approved</td>
-                            <td>View</td>
-                            <td></td>
-                        </tr>
                     </tbody>
                 </Table>
                 <Button variant="outline-secondary" onClick={() => this.showMore()}>
