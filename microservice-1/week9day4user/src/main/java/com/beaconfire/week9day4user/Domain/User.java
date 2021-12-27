@@ -35,6 +35,8 @@ public class User implements Serializable{
 	@Getter
 	@Setter
 	public static class Web {
+		private Integer id;
+		
 		private String username;
 
 		private String email;
@@ -42,6 +44,7 @@ public class User implements Serializable{
 		private boolean admin;
 
 		public Web(User user) {
+			id = user.id;
 			username = user.username;
 			email = user.email;
 			admin = user.admin;

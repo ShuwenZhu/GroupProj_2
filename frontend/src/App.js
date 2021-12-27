@@ -2,6 +2,7 @@ import React from 'react';
 import {BrowserRouter as Router, useRoutes } from 'react-router-dom';
 import './App.css';
 import Summary from './components/Summary/Summary';
+import Timesheet from './components/Timesheet/Timesheet';
 import {useSelector} from "react-redux";
 import userService from "./services/UserService";
 import {addUserS, store} from "./redux/store";
@@ -18,7 +19,7 @@ function Routes() {
   let routes = useRoutes([
     { path: "/", element: <Summary /> },
     { path: "summary", element: <Summary />},
-    // { path: "timesheet", element: <Timesheet />},
+    { path: "timesheet", element: <Timesheet />},
     // { path: "profile", element: <Profile />},
   ])
   return routes;
