@@ -33,8 +33,36 @@ class Summary extends Component {
         }
         
     }
+    comment(p){
+        let floating = 0;
+        let vacation = 0;
+        let holiday = 0;
+
+        let comment = "";
+
+        for(let i = 0; i < p.timesheet.length; i++){
+            if(p.timesheet[i].isFloating === true){
+                floating += 1;
+            }
+            else if(p.timesheet[i].isVacation === true){
+                vacation += 1;
+            }
+            else if(p.timesheet[i].isHoliday === true){
+                holiday += 1;
+            }
+        }
+        if(floating > 0){
+            comment += floating + " floating day(s) required ";
+        }
+        if(vacation > 0){
+            comment += vacation + " vacation day(s) required ";
+        }
+        if(holiday > 0){
+            comment += holiday + " holiday day(s) were included ";
+        }
+        return comment;
+    }
     render() {
-        console.log(store.getState());
         this.state.data.sort((oldDate, newDate) => new Date(...oldDate.weekEnding.split('/')) - new Date(...newDate.weekEnding.split('/'))).reverse();
         return (
             <>
@@ -58,7 +86,7 @@ class Summary extends Component {
                             <td>{p.submissionStatus}</td>
                             <td>{p.approvalStatus}</td>
                             <td>Edit</td>
-                            <td></td>
+                            <td>{this.comment(p)}</td>
                         </tr>)}
                     </tbody>
                 </Table>
