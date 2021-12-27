@@ -9,6 +9,7 @@ import com.beaconfire.week9day4user.Util.AmazonS3Util;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -83,7 +85,7 @@ public class UserController {
     }
     
     @GetMapping("/getUserWE")
-    public ResponseEntity<Optional<TimesheetRecord>> getUserWERecord(@RequestParam Integer userId, @RequestParam String weDate)
+    public ResponseEntity<Optional<TimesheetRecord>> getUserWERecord(@RequestHeader Map<String, String> headers, @RequestParam Integer userId, @RequestParam String weDate)
     {
     	return ResponseEntity.ok(timesheetService.getRecord(userId, weDate));
     }
