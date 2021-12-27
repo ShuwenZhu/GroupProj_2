@@ -2,7 +2,8 @@ import { Table, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar';
 import TimePicker from 'react-bootstrap-time-picker';
-import update from 'react-addons-update';
+
+const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
 class TimeSheet extends Component {
   constructor(props) {
@@ -12,29 +13,31 @@ class TimeSheet extends Component {
           billingHours: 32,
           compensatedHours: 40,
           uploadedFormApproval: "Approved Timesheet",
-          startingTimes: ["9:00:00","9:00:00","9:00:00","9:00:00","9:00:00","9:00:00","9:00:00"],
-          endingTimes: ["9:00:00","9:00:00","9:0:000","9:00:00","9:00:00","9:00:00","9:00:00"],
-          floatingDays: [false, false, false, false, false, false, false],
-          holidays: [false, false, false, false, false, false, false],
-          vacationDays: [false, false, false, false, false, false, false],
+          startingTimes: ["9:00:00","9:00:00","9:00:00","9:00:00","9:00:00"],
+          endingTimes: ["9:00:00","9:00:00","9:0:000","9:00:00","9:00:00"],
+          floatingDays: [false, false, false, false, false],
+          holidays: [false, false, false, true, false],
+          vacationDays: [false, false, false, false, false]
       }
-      const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   }
   componentDidMount() {
+
     // load default timesheet for user
   }
 
   getTotalBillingHours = () => {
     let totalHours = 0; 
-    for (let i = 0; i < 7; i++){
-      totalHours += ((this.state.endingTimes[i].replace(/[:]/g,"") - this.state.startingTimes[i].replace(/[:]/g,"")) / 10000);
+    for (let i = 0; i < 5; i++){
+      if (!(this.state.floatingDays[i] || this.state.vacationDays[i] || this.state.holidays[i])){
+        totalHours += ((this.state.endingTimes[i].replace(/[:]/g,"") - this.state.startingTimes[i].replace(/[:]/g,"")) / 10000);
+      }
     }
     return totalHours;
   }
 
   getTotalCompensatedHours = () => {
     let totalHours = this.getTotalBillingHours();
-    for (let i = 0; i < 7; i++){
+    for (let i = 0; i < 5; i++){
       if (this.state.floatingDays[i] || this.state.vacationDays[i]){
         totalHours += 8;
       }
@@ -64,6 +67,10 @@ class TimeSheet extends Component {
   }
 
   toggleFloatingDay = (i) => {
+    // check if it is a holiday
+    if (this.state.holidays[i])
+      return;
+
     // check if this day is already toggled on
     let day = this.state.floatingDays[i];
 
@@ -86,7 +93,11 @@ class TimeSheet extends Component {
     }
   }
 
-  toggleVacationDay = (i) => {
+  toggleVacationDay = (i) => {    
+    // check if it is a holiday
+    if (this.state.holidays[i])
+      return;
+      
     // check if this day is already toggled on
     let day = this.state.vacationDays[i];
 
@@ -131,10 +142,7 @@ class TimeSheet extends Component {
               Total Compensated Hours {this.getTotalCompensatedHours()}
             </div>
           </div>
-        </div>
-        <Button variant="primary" /*onClick={ set current timesheet as reusable template}*/>
-          Set Default
-        </Button>        
+        </div>       
         <Table striped bordered hover size="sm">
           <thead>
             <tr>
@@ -149,23 +157,29 @@ class TimeSheet extends Component {
             </tr>
           </thead>
           <tbody>
-            {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map( (day, index) => (
+            {DAYS_OF_WEEK.map( (day, index) => (
               <tr>
                 <td>{day}</td>
-                <td>{new Date(new Date().setDate(this.state.weekEnding.getDate() - (6 - index))).toLocaleDateString()}</td>
+                <td>{new Date(new Date(this.state.weekEnding).setDate(this.state.weekEnding.getDate() - (5 - index))).toLocaleDateString()}</td>
                 <td>
-                  {(!this.state.floatingDays[index] && !this.state.vacationDays[index]) 
+                  {(!this.state.floatingDays[index] && !this.state.vacationDays[index] && !this.state.holidays[index])
                     ? <TimePicker start="0:00" end="23:00" step={60} initialValue="9:00" onChange={(e) => this.handleStartingTimeChange(e, index)} value={this.state.startingTimes[index]}/>
                     : <div></div>
                   }
                 </td>
                 <td>
-                <TimePicker start="0:00" end="23:00" step={60} initialValue="17:00" onChange={(e) => this.handleEndingTimeChange(e, index)} value={this.state.endingTimes[index]}/>
+                {(!this.state.floatingDays[index] && !this.state.vacationDays[index] && !this.state.holidays[index]) 
+                    ? <TimePicker start="0:00" end="23:00" step={60} initialValue="17:00" onChange={(e) => this.handleEndingTimeChange(e, index)} value={this.state.endingTimes[index]}/>
+                    : <div></div>
+                  }
                 </td>
-                <td>{((this.state.endingTimes[index].replace(/[:]/g,"") - this.state.startingTimes[index].replace(/[:]/g,""))) / 10000}</td>
+                <td>
+                  {(!this.state.floatingDays[index] && !this.state.vacationDays[index] && !this.state.holidays[index])
+                  ? <>{((this.state.endingTimes[index].replace(/[:]/g,"") - this.state.startingTimes[index].replace(/[:]/g,""))) / 10000}</>
+                  : <>N/A</>}</td>
                 <td><Button variant="outline-secondary" onClick={() => this.toggleFloatingDay(index)}>{(this.state.floatingDays[index]) ? "X" : "-"}</Button></td>
                 <td><Button variant="outline-secondary" onClick={() => this.toggleVacationDay(index)}>{(this.state.vacationDays[index]) ? "X" : "-"}</Button></td>
-                <td><Button variant="outline-secondary">-</Button></td>
+                <td><Button variant="outline-secondary">{(this.state.holidays[index]) ? "X" : "-"}</Button></td>
               </tr>
             ))}
           </tbody>
@@ -186,6 +200,9 @@ class TimeSheet extends Component {
               uploaded file name
             </div>
             <div className="col-sm">
+              <Button variant="primary" /*onClick={ set current timesheet as reusable template}*/>
+                Set Default
+              </Button> 
             </div>
             <div className="col-sm">
               <Button variant="primary" /*onClick={ save current Timesheet }*/>
