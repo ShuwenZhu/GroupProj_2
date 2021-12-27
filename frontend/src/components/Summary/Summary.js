@@ -2,7 +2,10 @@ import { Table, Button } from 'react-bootstrap';
 import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar';
 import SummaryService from '../../services/SummaryService';
-// import {useSelector} from "react-redux";
+import {store} from "../../redux/store";
+import {useSelector} from "react-redux";
+import userService from '../../services/UserService';
+
 
 class Summary extends Component {
     constructor(props) {
@@ -11,20 +14,28 @@ class Summary extends Component {
         this.state = {
             data: [],
             numberOfSummary: 5,
-            // sorted_date: [],
         }
         
     }
     componentDidMount() {
-        SummaryService.fetchTimesheet(1).then((response) => this.setState({ data: response.data }));
+        store.subscribe(()=> SummaryService.fetchTimesheet(store.getState().user[0].id).then((response) => this.setState({ data: response.data })));
+        
         
     }
     showMore(){
-        this.setState({numberOfSummary: this.state.numberOfSummary + 5});
+        if(this.state.numberOfSummary < this.state.data.length){
+            this.setState({numberOfSummary: this.state.numberOfSummary + 5});
+        }
+    }
+    showLess(){
+        if(this.state.numberOfSummary > 5){
+            this.setState({numberOfSummary: this.state.numberOfSummary - 5});
+        }
+        
     }
     render() {
+        console.log(store.getState());
         this.state.data.sort((oldDate, newDate) => new Date(...oldDate.weekEnding.split('/')) - new Date(...newDate.weekEnding.split('/'))).reverse();
-        console.log(this.state.data);
         return (
             <>
                 <NavBar></NavBar>
@@ -53,6 +64,9 @@ class Summary extends Component {
                 </Table>
                 <Button variant="outline-secondary" onClick={() => this.showMore()}>
                     Show More
+                </Button>
+                <Button variant="outline-secondary" onClick={() => this.showLess()}>
+                    Show Less
                 </Button>
             </>
         )

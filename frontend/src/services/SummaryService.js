@@ -7,7 +7,6 @@ const transport = axios.create({
 })
 class ApiService {
     fetchTimesheet(userId){
-        // console.log(userId);
         return transport
         .get(API_BASE_URL + 'getUserWEByUserId?userId=' + userId)
         .catch(err => { window.location.href = API_BASE_URL })
