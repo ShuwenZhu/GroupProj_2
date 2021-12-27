@@ -54,5 +54,27 @@ public class TimesheetService {
 		}
 		return false;
 	}
+
+	public Optional<TimesheetRecord> getRecord(Integer userId, String weDate) {
+		Optional<List<TimesheetRecord>> recordOptional = timesheetRepository.findByUserId(userId);
+		TimesheetRecord r = null;
+		if (recordOptional.isPresent())
+		{
+			for (TimesheetRecord tr : recordOptional.get())
+			{
+				System.out.println(tr.getWeekEnding());
+			}
+			List<TimesheetRecord> rl = recordOptional.get().stream()
+					.filter(_r -> _r.weekEnding.compareToIgnoreCase(weDate) == 0)
+					.collect(Collectors.toList());
+			r = rl.get(0);
+		}
+		return Optional.ofNullable(r);
+	}
+
+	public Optional<List<TimesheetRecord>> getRecords(Integer userId) {
+		
+		return timesheetRepository.findByUserId(userId);
+	}
 	
 }

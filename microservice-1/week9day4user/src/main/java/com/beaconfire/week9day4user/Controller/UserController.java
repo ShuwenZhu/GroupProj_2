@@ -1,12 +1,15 @@
 package com.beaconfire.week9day4user.Controller;
 
 import com.beaconfire.week9day4user.Domain.User;
+import com.beaconfire.week9day4user.Domain.MangoDBobj.TimesheetRecord;
 import com.beaconfire.week9day4user.Domain.responseObjects.ResponseMsg;
 import com.beaconfire.week9day4user.Filter.JwtFilter;
 import com.beaconfire.week9day4user.Service.TimesheetService;
 import com.beaconfire.week9day4user.Util.AmazonS3Util;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -78,5 +81,16 @@ public class UserController {
     	else
     		return new ResponseMsg("failed");
     }
-
+    
+    @GetMapping("/getUserWE")
+    public ResponseEntity<Optional<TimesheetRecord>> getUserWERecord(@RequestParam Integer userId, @RequestParam String weDate)
+    {
+    	return ResponseEntity.ok(timesheetService.getRecord(userId, weDate));
+    }
+    
+    @GetMapping("/getUserWEByUserId")
+    public ResponseEntity<Optional<List<TimesheetRecord>>> getUserWERecord(@RequestParam Integer userId)
+    {
+    	return ResponseEntity.ok(timesheetService.getRecords(userId));
+    }
 }
