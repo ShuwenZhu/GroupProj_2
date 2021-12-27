@@ -10,11 +10,9 @@ class TimeSheet extends Component {
       super(props);
       this.state = {
           weekEnding: new Date("1/8/2022"),
-          billingHours: 32,
-          compensatedHours: 40,
           uploadedFormApproval: "Approved Timesheet",
           startingTimes: ["9:00:00","9:00:00","9:00:00","9:00:00","9:00:00"],
-          endingTimes: ["9:00:00","9:00:00","9:0:000","9:00:00","9:00:00"],
+          endingTimes:   ["9:00:00","9:00:00","9:00:00","9:00:00","9:00:00"],
           floatingDays: [false, false, false, false, false],
           holidays: [false, false, false, true, false],
           vacationDays: [false, false, false, false, false]
@@ -50,9 +48,17 @@ class TimeSheet extends Component {
     date.setSeconds(time); 
     var result = date.toISOString().substr(11, 8);
 
+    console.log(result.replace(/[:]/g,""));
+    console.log(this.state.endingTimes[i].replace(/[:]/g,""));
+
+    if (parseInt(result.replace(/[:]/g,""),10) > parseInt(this.state.endingTimes[i].replace(/[:]/g,""),10)){
+      alert("invalid time");
+      return;
+    }
+      
+
     let startingTimes = [...this.state.startingTimes];
     startingTimes[i] = result; 
-    console.log(result);
     this.setState({startingTimes});
   }
 
@@ -61,6 +67,14 @@ class TimeSheet extends Component {
     date.setSeconds(time); 
     var result = date.toISOString().substr(11, 8);
 
+    console.log(result.replace(/[:]/g,""));
+    console.log(this.state.startingTimes[i].replace(/[:]/g,""));
+
+    if (parseInt(result.replace(/[:]/g,""),10) < parseInt(this.state.startingTimes[i].replace(/[:]/g,""),10)){
+      alert("invalid time");
+      return;
+    }
+    
     let endingTimes = [...this.state.endingTimes];
     endingTimes[i] = result; 
     this.setState({endingTimes});
@@ -211,10 +225,9 @@ class TimeSheet extends Component {
             </div>
           </div>
         </div>
-
       </>
     )
-}
+  }
 }
 
 export default TimeSheet;
