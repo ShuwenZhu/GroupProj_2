@@ -7,13 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @FeignClient("user-service")
 public interface RemoteUserService {
 
     @GetMapping("timesheet/getUserWE")
-    ResponseEntity<Optional<TimesheetRecord>> getUserWERecord(@RequestParam Integer userId,@RequestParam String weDate);
+    ResponseEntity<Optional<TimesheetRecord>> getUserWERecord(@RequestHeader Map<String, String> headers, @RequestParam("userId") Integer userId,@RequestParam("weDate") String weDate);
 
 //
 //    @PostMapping("xxxxx")
