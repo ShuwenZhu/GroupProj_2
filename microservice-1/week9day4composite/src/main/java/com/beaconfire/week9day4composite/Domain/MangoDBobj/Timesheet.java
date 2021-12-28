@@ -1,7 +1,4 @@
-package com.beaconfire.week9day4user.Domain.MangoDBobj;
-
-import com.beaconfire.week9day4user.Domain.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package com.beaconfire.week9day4composite.Domain.MangoDBobj;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,10 +1,7 @@
-package com.beaconfire.week9day4user.Domain.MangoDBobj;
+package com.beaconfire.week9day4composite.Domain.MangoDBobj;
 
 import java.io.Serializable;
 import java.util.List;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,10 +16,8 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-@Document(collection="TimesheetManagementDB")
 public class TimesheetRecord implements Serializable {
 	
-	@Id
 	public String _id;
 	
 	public Integer userId;
