@@ -5,6 +5,7 @@ import SummaryService from '../../services/SummaryService';
 import {store} from "../../redux/store";
 import {useSelector} from "react-redux";
 import userService from '../../services/UserService';
+import { Popup, Button as But } from 'semantic-ui-react'
 
 
 class Summary extends Component {
@@ -32,6 +33,31 @@ class Summary extends Component {
         }
         
     }
+
+    submissionStatus(p){
+        // return p.submissionStatus;
+        if(p.submissionStatus === "Incomplete"){
+            return <p>{p.submissionStatus} <Popup content='Add users to your feed' trigger={<But>!</But>} /></p>
+        }
+        else{
+            return <p>{p.submissionStatus}</p>
+        }  
+    }
+
+    approvalStatus(p){
+        console.log(p);
+        if(p.isApprovedAttachment){
+            return <p>Approved</p>
+        }
+        else{
+            return <p>Not Approved<Popup content='Add users to your feed' trigger={<But>!</But>} /></p>
+        }  
+    }
+
+    commentStatus(p){
+        return <td>{this.comment(p)}<Popup content='???' trigger={<But>!</But>} /></td>
+    }
+
     comment(p){
         let floating = 0;
         let vacation = 0;
@@ -62,17 +88,17 @@ class Summary extends Component {
         return comment;
     }
 
-    submissionStatusHover(bool){
-        if(bool === true){
-            console.log("hello");
+    option(p){
+        if(p.isApprovedAttachment){
+            return <Button variant= "primary" onClick={() => this.showMore()}>View</Button>
         }
         else{
-            console.log("bye");
+            return <Button variant= "primary" onClick={() => this.showMore()}>Edit</Button>
         }
     }
 
     render() {
-        this.state.data.sort((oldDate, newDate) => new Date(...oldDate.weekEnding.split('/')) - new Date(...newDate.weekEnding.split('/'))).reverse();
+        this.state.data.sort((oldDate, newDate) => new Date(...newDate.weekEnding.split('/')) - new Date(...oldDate.weekEnding.split('/')));
         return (
             <>
                 <NavBar></NavBar>
@@ -92,20 +118,15 @@ class Summary extends Component {
                         <tr key={p.weekEnding}>
                             <td>{p.weekEnding}</td>
                             <td>{p.compensatedHour}</td>
-                            <td>{p.submissionStatus}
                             
-                            <button
-                                onMouseEnter={() => this.submissionStatusHover(true)}
-                                onMouseLeave={() => this.submissionStatusHover(false)}>
-                                !
-                              </button></td>
-                            <td>{p.approvalStatus}</td>
-                            <td>Edit</td>
-                            <td>{this.comment(p)}<button
-                                onMouseEnter={() => this.submissionStatusHover(true)}
-                                onMouseLeave={() => this.submissionStatusHover(false)}>
-                                !
-                              </button></td>
+                            <td>{this.submissionStatus(p)}</td>
+                            <td>{this.approvalStatus(p)}</td>
+
+                            <td>{this.option(p)}</td>
+                            
+                            <td>{this.commentStatus(p)}</td>
+
+                            
                         </tr>)}
                     </tbody>
                 </Table>
