@@ -102,7 +102,9 @@ class Summary extends Component {
     }
 
     redirectTimesheet(p){
-        window.location = "/timesheet?weekEnding=" + p.weekEnding;
+        let original = p.weekEnding;
+        let slashTo2F = original.replaceAll("/", "%2F");
+        window.location = "/timesheet?weekEnding=" + slashTo2F;
     }
 
     render() {
