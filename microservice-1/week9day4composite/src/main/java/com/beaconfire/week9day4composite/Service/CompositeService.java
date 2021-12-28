@@ -26,21 +26,17 @@ public class CompositeService {
         this.remoteUserService = remoteUserService;
     }
 
-    public UserWEDetail getWEDetail(Map<String, String> headers, String weDate, Integer userId, String sessionCookie){
-//    	Optional<TimesheetRecord> weRecord = remoteUserService.getUserWERecord(userId, weDate).getBody();
+    public UserWEDetail getWEDetail(Map<String, String> headers, String weDate, Integer userId){
+    	Optional<TimesheetRecord> weRecord = remoteUserService.getUserWERecord(headers, userId, weDate).getBody();
         Optional<UserContact> userContact = remoteHousingService.getUserContact(headers, userId).getBody();
         
-        if (userContact.isPresent())
-        {
-        	System.out.println("!!!!!!" + userContact.get().get_id());
-        }
         
-//        if (weRecord.isPresent() && userContact.isPresent())
-//        	return UserWEDetail.builder().record(weRecord.get())
-//        					  .maxFloatDays(userContact.get().getMaxFloatDays())
-//        					  .maxVacationDays(userContact.get().getMaxVacationDays())
-//        					  .usedFloatDays(userContact.get().getUsedFloatDays())
-//        					  .usedVacationDays(userContact.get().getUsedVacationDays()).build();
+        if (weRecord.isPresent() && userContact.isPresent())
+        	return UserWEDetail.builder().record(weRecord.get())
+        					  .maxFloatDays(userContact.get().getMaxFloatDays())
+        					  .maxVacationDays(userContact.get().getMaxVacationDays())
+        					  .usedFloatDays(userContact.get().getUsedFloatDays())
+        					  .usedVacationDays(userContact.get().getUsedVacationDays()).build();
         return null;
     }
 

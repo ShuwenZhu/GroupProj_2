@@ -26,7 +26,6 @@ public class CompositeController {
     @GetMapping("getWeekEndInfo")
     public ResponseEntity<UserWEDetail> getWEDetail(@RequestHeader Map<String, String> headers, String weDate, Integer userId){
 //    	System.out.println("****************" + weDate + " " + userId);
-    	String sessionCookie = "";
-        return ResponseEntity.ok(compositeService.getWEDetail(headers, weDate, userId,  sessionCookie));
+        return ResponseEntity.ok(compositeService.getWEDetail(headers, weDate, userId));
     }
 }
