@@ -10,7 +10,7 @@ const userSlice = createSlice({
                 console.log('add User');
                 console.log(action.payload);
                 state.user = [action.payload];
-                console.log(state);
+                console.log(state.user);
             },
             removeUserS: (state)=>{
                 console.log('remove User');
