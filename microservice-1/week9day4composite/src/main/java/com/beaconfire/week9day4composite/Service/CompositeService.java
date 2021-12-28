@@ -1,7 +1,10 @@
 package com.beaconfire.week9day4composite.Service;
 
 import com.beaconfire.week9day4composite.Domain.HousingService.House;
+import com.beaconfire.week9day4composite.Domain.MangoDBobj.TimesheetRecord;
+import com.beaconfire.week9day4composite.Domain.MangoDBobj.UserContact;
 import com.beaconfire.week9day4composite.Domain.UserHouse;
+import com.beaconfire.week9day4composite.Domain.UserWEDetail;
 import com.beaconfire.week9day4composite.Domain.UserService.User;
 import com.beaconfire.week9day4composite.Service.RemoteService.RemoteHousingService;
 import com.beaconfire.week9day4composite.Service.RemoteService.RemoteUserService;
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CompositeService {
@@ -21,21 +26,18 @@ public class CompositeService {
         this.remoteUserService = remoteUserService;
     }
 
-    public List<UserHouse> getAllUserHouse(){
-        List<User> userList = remoteUserService.getAllUsers().getBody();
-        List<House> houseList = remoteHousingService.getAllHouses().getBody();
-        remoteUserService.getByID(1,"token");
-        List<UserHouse> userHouseList = new ArrayList<>();
-        for (int i = 0; i < 3; i++){
-            userHouseList.add(
-                    UserHouse.builder()
-                            .user(userList.get(i))
-                            .house(houseList.get(i))
-                            .build()
-            );
-        }
-
-        return userHouseList;
+    public UserWEDetail getWEDetail(Map<String, String> headers, String weDate, Integer userId){
+    	Optional<TimesheetRecord> weRecord = remoteUserService.getUserWERecord(headers, userId, weDate).getBody();
+        Optional<UserContact> userContact = remoteHousingService.getUserContact(headers, userId).getBody();
+        
+        
+        if (weRecord.isPresent() && userContact.isPresent())
+        	return UserWEDetail.builder().record(weRecord.get())
+        					  .maxFloatDays(userContact.get().getMaxFloatDays())
+        					  .maxVacationDays(userContact.get().getMaxVacationDays())
+        					  .usedFloatDays(userContact.get().getUsedFloatDays())
+        					  .usedVacationDays(userContact.get().getUsedVacationDays()).build();
+        return null;
     }
 
 }

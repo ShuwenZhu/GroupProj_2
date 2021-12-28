@@ -8,11 +8,14 @@ import userService from "./services/UserService";
 
 
 function Routes() {
-  // const userlist = useSelector((state)=>state.user)
-  // if (userlist.length == 0)
-  // {
-  //   userService.fetchUser()
-  // }
+  const userlist = useSelector((state)=>state.user)
+  if (userlist.length == 0)
+  {
+    userService.fetchUser()
+  }
+
+  console.log(userlist[0])
+
   let routes = useRoutes([
     { path: "/", element: <Summary /> },
     { path: "summary", element: <Summary />},

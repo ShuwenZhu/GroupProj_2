@@ -18,6 +18,8 @@ public class UserDAOImpl extends AbstractHibernateDAO<User> implements UserDAO {
 	@Override
 	public User getUserByName(String username) {
 		List<User> users = this.findByField("username", username);
+		if(users.size() > 0)
+			System.out.println("found user: id="+users.get(0).getId() + " Name="+users.get(0).getUsername());
 		return users.size() == 0 ? null : users.get(0);
 	}
 

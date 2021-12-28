@@ -1,10 +1,13 @@
 package com.beaconfire.week9day4housing.Controller;
 
 import com.beaconfire.week9day4housing.DAO.UserContactRepository;
+import com.beaconfire.week9day4housing.Domain.MangoDBobj.UserContact;
 import com.beaconfire.week9day4housing.Domain.responseObjects.ResponseMsg;
 import com.beaconfire.week9day4housing.Util.AmazonS3Util;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +36,13 @@ public class HousingController {
     @GetMapping("getAll")
     public ResponseEntity getAllHouses(){
         return ResponseEntity.ok(userContactRepository.findAll());
+    }
+    
+    @GetMapping("getUserContact")
+    public ResponseEntity<Optional<UserContact>> getUserContact(@RequestHeader Map<String, String> headers, Integer userId)
+    {
+    	System.out.println(">>>>>>>>CALLED USERCONTACT GET USERCONTACT METHOD");
+    	return ResponseEntity.ok(userContactRepository.findByUserId(userId));
     }
     
     @PostMapping("/uploadavatar")
