@@ -1,6 +1,11 @@
 import { Table, Button } from 'react-bootstrap';
 import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar';
+import SummaryService from '../../services/SummaryService';
+import {store} from "../../redux/store";
+import {useSelector} from "react-redux";
+import userService from '../../services/UserService';
+
 
 class Summary extends Component {
     constructor(props) {
@@ -10,19 +15,55 @@ class Summary extends Component {
             data: [],
             numberOfSummary: 5,
         }
+        
     }
     componentDidMount() {
-        // need to create service for 5 recent information
-        // ApiService.fetchSummary(this.state.numberOfSummary).then((response) => this.setState({ data: response.data }));
+        store.subscribe(()=> SummaryService.fetchTimesheet(store.getState().user[0].id).then((response) => this.setState({ data: response.data })));
+        
+        
     }
     showMore(){
-        this.setState({numberOfSummary: this.state.numberOfSummary + 5});
-        console.log(this.state.numberOfSummary);
-        // ApiService.fetchSummary(this.state.numberOfSummary).then((response) => this.setState({ data: response.data }));
-        //idea = once we click the button, the show value will add up to 5. 
-        //Later, we can use fetch(show-value) to display the number of the recent week ending.
+        if(this.state.numberOfSummary < this.state.data.length){
+            this.setState({numberOfSummary: this.state.numberOfSummary + 5});
+        }
+    }
+    showLess(){
+        if(this.state.numberOfSummary > 5){
+            this.setState({numberOfSummary: this.state.numberOfSummary - 5});
+        }
+        
+    }
+    comment(p){
+        let floating = 0;
+        let vacation = 0;
+        let holiday = 0;
+
+        let comment = "";
+
+        for(let i = 0; i < p.timesheet.length; i++){
+            if(p.timesheet[i].isFloating === true){
+                floating += 1;
+            }
+            else if(p.timesheet[i].isVacation === true){
+                vacation += 1;
+            }
+            else if(p.timesheet[i].isHoliday === true){
+                holiday += 1;
+            }
+        }
+        if(floating > 0){
+            comment += floating + " floating day(s) required ";
+        }
+        if(vacation > 0){
+            comment += vacation + " vacation day(s) required ";
+        }
+        if(holiday > 0){
+            comment += holiday + " holiday day(s) were included ";
+        }
+        return comment;
     }
     render() {
+        this.state.data.sort((oldDate, newDate) => new Date(...oldDate.weekEnding.split('/')) - new Date(...newDate.weekEnding.split('/'))).reverse();
         return (
             <>
                 <NavBar></NavBar>
@@ -38,43 +79,22 @@ class Summary extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* hard coded for now... need something like 
-                        
-                        {this.state.data.map(p => 
-                        <tr key={p.hardness}>
-                            <td>{p.name}</td>...
+                        {this.state.data.slice(0, this.state.numberOfSummary).map(p => 
+                        <tr key={p.weekEnding}>
+                            <td>{p.weekEnding}</td>
+                            <td>{p.compensatedHour}</td>
+                            <td>{p.submissionStatus}</td>
+                            <td>{p.approvalStatus}</td>
+                            <td>Edit</td>
+                            <td>{this.comment(p)}</td>
                         </tr>)}
-                        
-                        later
-                        */}
-                        <tr>
-                            <td>12/17/2021</td>
-                            <td>40</td>
-                            <td>Not Started</td>
-                            <td>N/A</td>
-                            <td>Edit</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>12/10/2021</td>
-                            <td>32</td>
-                            <td>Incomplete</td>
-                            <td>Not approved</td>
-                            <td>Edit</td>
-                            <td>1 Floating Day Required</td>
-                        </tr>
-                        <tr>
-                            <td>12/03/2021</td>
-                            <td>40</td>
-                            <td>Complete</td>
-                            <td>Not approved</td>
-                            <td>View</td>
-                            <td></td>
-                        </tr>
                     </tbody>
                 </Table>
                 <Button variant="outline-secondary" onClick={() => this.showMore()}>
                     Show More
+                </Button>
+                <Button variant="outline-secondary" onClick={() => this.showLess()}>
+                    Show Less
                 </Button>
             </>
         )
