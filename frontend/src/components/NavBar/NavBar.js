@@ -17,6 +17,7 @@ class NavBar extends Component {
                       <Navbar.Brand href="/summary">Summary</Navbar.Brand>
                       <Navbar.Brand href="/timesheet">Timesheet</Navbar.Brand>
                       <Navbar.Brand href="/profile">Profile</Navbar.Brand>
+                        <Navbar.Brand href='/HRManage'>Manage</Navbar.Brand>
                       <Navbar.Brand href='http://localhost:9999/logout?redirect=http://localhost:3000'> Log Out</Navbar.Brand>
                     </Container>
                   </Navbar>

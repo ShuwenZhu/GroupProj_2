@@ -7,6 +7,7 @@ import {useSelector} from "react-redux";
 import userService from "./services/UserService";
 import {addUserS, store} from "./redux/store";
 import User from "./components/User/User";
+import HRApprove from "./components/HRApprove/HRApprove";
 
 function Routes() {
   const userlist = useSelector((state)=>state.user)  // Rule 1: call hooks in top-level
@@ -21,6 +22,7 @@ function Routes() {
     { path: "summary", element: <Summary />},
     { path: "timesheet", element: <Timesheet />},
     // { path: "profile", element: <Profile />},
+    {path: 'HRManage', element: <HRApprove/>}
   ])
   return routes;
 }
