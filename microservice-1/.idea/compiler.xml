@@ -17,7 +17,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="eureka" target="1.8" />
-      <module name="week9day4composite" target="1.8" />
+      <module name="week9day4composite" target="11" />
       <module name="week9day4eureka" target="1.8" />
       <module name="week9day4gateway" target="1.8" />
       <module name="week9day4housing" target="1.8" />

@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar';
 import TimePicker from 'react-bootstrap-time-picker';
 import { TimesheetHOC } from './TimesheetHOC';
+import TimesheetService from '../../services/TimesheetService';
 
 const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
@@ -24,6 +25,7 @@ class Timesheet extends Component {
   componentDidMount() {
 
     // load default timesheet for user
+    TimesheetService.fetchTimesheet(); 
   }
 
   getTotalBillingHours = () => {
