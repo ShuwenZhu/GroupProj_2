@@ -1,4 +1,4 @@
-import { Table, Button, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Table, Button, DropdownButton, Dropdown, Form, Container, Row, Col } from 'react-bootstrap';
 import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar';
 import TimePicker from 'react-bootstrap-time-picker';
@@ -15,7 +15,8 @@ class TimeSheet extends Component {
           endingTimes:   ["9:00:00","9:00:00","9:00:00","9:00:00","9:00:00"],
           floatingDays: [false, false, false, false, false],
           holidays: [false, false, false, true, false],
-          vacationDays: [false, false, false, false, false]
+          vacationDays: [false, false, false, false, false],
+          file: null
       }
   }
   componentDidMount() {
@@ -48,14 +49,10 @@ class TimeSheet extends Component {
     date.setSeconds(time); 
     var result = date.toISOString().substr(11, 8);
 
-    console.log(result.replace(/[:]/g,""));
-    console.log(this.state.endingTimes[i].replace(/[:]/g,""));
-
     if (parseInt(result.replace(/[:]/g,""),10) > parseInt(this.state.endingTimes[i].replace(/[:]/g,""),10)){
       alert("invalid time");
       return;
     }
-      
 
     let startingTimes = [...this.state.startingTimes];
     startingTimes[i] = result; 
@@ -66,9 +63,6 @@ class TimeSheet extends Component {
     var date = new Date(null);
     date.setSeconds(time); 
     var result = date.toISOString().substr(11, 8);
-
-    console.log(result.replace(/[:]/g,""));
-    console.log(this.state.startingTimes[i].replace(/[:]/g,""));
 
     if (parseInt(result.replace(/[:]/g,""),10) < parseInt(this.state.startingTimes[i].replace(/[:]/g,""),10)){
       alert("invalid time");
@@ -140,6 +134,12 @@ class TimeSheet extends Component {
     })
   }
 
+  handleFileChange = (e) => {
+    this.setState({
+      file: e.target.files[0]
+    })
+  }
+
   render() {
     return (
       <>
@@ -182,15 +182,16 @@ class TimeSheet extends Component {
                   }
                 </td>
                 <td>
-                {(!this.state.floatingDays[index] && !this.state.vacationDays[index] && !this.state.holidays[index]) 
+                  {(!this.state.floatingDays[index] && !this.state.vacationDays[index] && !this.state.holidays[index]) 
                     ? <TimePicker start="0:00" end="23:00" step={60} initialValue="17:00" onChange={(e) => this.handleEndingTimeChange(e, index)} value={this.state.endingTimes[index]}/>
                     : <div></div>
                   }
                 </td>
                 <td>
                   {(!this.state.floatingDays[index] && !this.state.vacationDays[index] && !this.state.holidays[index])
-                  ? <>{((this.state.endingTimes[index].replace(/[:]/g,"") - this.state.startingTimes[index].replace(/[:]/g,""))) / 10000}</>
-                  : <>N/A</>}</td>
+                    ? <>{((this.state.endingTimes[index].replace(/[:]/g,"") - this.state.startingTimes[index].replace(/[:]/g,""))) / 10000}</>
+                    : <>N/A</>
+                  }</td>
                 <td><Button variant="outline-secondary" onClick={() => this.toggleFloatingDay(index)}>{(this.state.floatingDays[index]) ? "X" : "-"}</Button></td>
                 <td><Button variant="outline-secondary" onClick={() => this.toggleVacationDay(index)}>{(this.state.vacationDays[index]) ? "X" : "-"}</Button></td>
                 <td><Button variant="outline-secondary">{(this.state.holidays[index]) ? "X" : "-"}</Button></td>
@@ -199,32 +200,48 @@ class TimeSheet extends Component {
           </tbody>
         </Table>
 
-        <div className="container">
-          <div className="row">
-            <div className="col-sm">
-              <DropdownButton id="dropdown-basic-button" title={this.state.uploadedFormApproval} value={this.state.uploadedFormApproval} onSelect={this.handleSelect}>
+        <Container>
+          <Row>
+            <Col>
+              <Button variant="secondary" /*onClick={ set current timesheet as reusable template}*/>
+                Set Default
+              </Button> 
+            </Col>
+            <Col>
+            </Col>
+            <Col>
+              <Button variant="primary" /*onClick={ save current Timesheet }*/>
+                Submit
+              </Button>            
+            </Col>
+          </Row>
+        </Container>
+        <br/>
+        <hr></hr>
+        <h2 style={{display: 'flex', justifyContent: 'center'}}>External Timesheet Submission</h2> 
+        <br/>
+        <Container>
+          <Row>
+          <Col>
+              <DropdownButton variant="secondary" id="dropdown-basic-button" title={this.state.uploadedFormApproval} value={this.state.uploadedFormApproval} onSelect={this.handleSelect}>
                 <Dropdown.Item eventKey="Approved Timesheet">Approved Timesheet</Dropdown.Item>
                 <Dropdown.Item eventKey="Unapproved Timesheet">Unapproved Timesheet</Dropdown.Item>
               </DropdownButton>
-            </div>
-            <div className="col-sm">
-              <Button variant="secondary" /*onClick={ let user choose file to upload }*/>
-                Choose file
+            </Col>
+            <Col xs={6}>
+              <Form.Group controlId="formFileSm" className="mb-3" onChange={(e) => this.handleFileChange(e)}>
+                <Form.Control type="file" />
+              </Form.Group>
+            </Col>
+            <Col>
+            </Col>
+            <Col>
+              <Button>
+                Submit
               </Button>
-              uploaded file name
-            </div>
-            <div className="col-sm">
-              <Button variant="primary" /*onClick={ set current timesheet as reusable template}*/>
-                Set Default
-              </Button> 
-            </div>
-            <div className="col-sm">
-              <Button variant="primary" /*onClick={ save current Timesheet }*/>
-                Save
-              </Button>            
-            </div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Container>
       </>
     )
   }
