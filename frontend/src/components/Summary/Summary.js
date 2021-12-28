@@ -3,10 +3,9 @@ import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar';
 import SummaryService from '../../services/SummaryService';
 import {store} from "../../redux/store";
-import {useSelector} from "react-redux";
-import userService from '../../services/UserService';
-import { Popup, Button as But } from 'semantic-ui-react'
-
+import { Popup, Button as But } from 'semantic-ui-react';
+import 'semantic-ui-css/semantic.min.css'
+import {Router, Route, Link, RouteHandler} from 'react-router';
 
 class Summary extends Component {
     constructor(props) {
@@ -35,26 +34,31 @@ class Summary extends Component {
     }
 
     submissionStatus(p){
-        // return p.submissionStatus;
         if(p.submissionStatus === "Incomplete"){
-            return <p>{p.submissionStatus} <Popup content='Add users to your feed' trigger={<But>!</But>} /></p>
+            return <p>{p.submissionStatus} <Popup content='Items due: Proof of Approved TimeSheet' trigger={<But>!</But>}/></p>
         }
         else{
             return <p>{p.submissionStatus}</p>
         }  
     }
 
-    approvalStatus(p){
-        console.log(p);
+    approvalStatus(p){     
         if(p.isApprovedAttachment){
             return <p>Approved</p>
         }
+        else if(!p.isApprovedAttachment){
+            return <p>Not Approved <Popup content='Approval denied by Admin, please contact your HR manager' trigger={<But>!</But>}/></p>
+        }
         else{
-            return <p>Not Approved<Popup content='Add users to your feed' trigger={<But>!</But>} /></p>
+            return <p>N/A</p>
         }  
     }
 
     commentStatus(p){
+        let comment = this.comment(p); 
+        if (comment === ""){
+            return <td>{this.comment(p)}</td>
+        }
         return <td>{this.comment(p)}<Popup content='???' trigger={<But>!</But>} /></td>
     }
 
@@ -90,11 +94,15 @@ class Summary extends Component {
 
     option(p){
         if(p.isApprovedAttachment){
-            return <Button variant= "primary" onClick={() => this.showMore()}>View</Button>
+            return <Button variant= "primary" onClick={() => this.redirectTimesheet(p)}>View</Button>
         }
         else{
-            return <Button variant= "primary" onClick={() => this.showMore()}>Edit</Button>
+            return <Button variant= "primary" onClick={() => this.redirectTimesheet(p)} >Edit</Button>
         }
+    }
+
+    redirectTimesheet(p){
+        window.location = "/timesheet?weekEnding=" + p.weekEnding;
     }
 
     render() {
