@@ -15,7 +15,6 @@ class Summary extends Component {
             data: [],
             numberOfSummary: 5,
         }
-        
     }
     componentDidMount() {
         store.subscribe(()=> SummaryService.fetchTimesheet(store.getState().user[0].id).then((response) => this.setState({ data: response.data })));
@@ -62,6 +61,16 @@ class Summary extends Component {
         }
         return comment;
     }
+
+    submissionStatusHover(bool){
+        if(bool === true){
+            console.log("hello");
+        }
+        else{
+            console.log("bye");
+        }
+    }
+
     render() {
         this.state.data.sort((oldDate, newDate) => new Date(...oldDate.weekEnding.split('/')) - new Date(...newDate.weekEnding.split('/'))).reverse();
         return (
@@ -83,10 +92,20 @@ class Summary extends Component {
                         <tr key={p.weekEnding}>
                             <td>{p.weekEnding}</td>
                             <td>{p.compensatedHour}</td>
-                            <td>{p.submissionStatus}</td>
+                            <td>{p.submissionStatus}
+                            
+                            <button
+                                onMouseEnter={() => this.submissionStatusHover(true)}
+                                onMouseLeave={() => this.submissionStatusHover(false)}>
+                                !
+                              </button></td>
                             <td>{p.approvalStatus}</td>
                             <td>Edit</td>
-                            <td>{this.comment(p)}</td>
+                            <td>{this.comment(p)}<button
+                                onMouseEnter={() => this.submissionStatusHover(true)}
+                                onMouseLeave={() => this.submissionStatusHover(false)}>
+                                !
+                              </button></td>
                         </tr>)}
                     </tbody>
                 </Table>
