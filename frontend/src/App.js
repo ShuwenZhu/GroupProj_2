@@ -33,7 +33,6 @@ const App = () => {
     <Router>
       <User/>
       <Routes/>
-      <Profile/>
     </Router>
   );
 };
