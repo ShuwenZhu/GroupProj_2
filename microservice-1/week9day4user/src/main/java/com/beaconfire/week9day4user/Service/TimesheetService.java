@@ -1,5 +1,6 @@
 package com.beaconfire.week9day4user.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,6 +20,13 @@ public class TimesheetService {
 	public List<TimesheetRecord> getAllRecords()
 	{
 		return timesheetRepository.findAll();
+	}
+	
+	public List<TimesheetRecord> findTimesheetRecordBySubmissionStatus(String sbStatus, String aStatus)
+	{
+		List<TimesheetRecord> result = timesheetRepository.findTimesheetRecordBySubmissionStatus(sbStatus, aStatus);
+		result.sort((A,B)->A.getUserId()-B.getUserId());
+		return result;
 	}
 	
 	public boolean update(Integer userId, String weDate, String documentUrl)
@@ -75,6 +83,23 @@ public class TimesheetService {
 	public Optional<List<TimesheetRecord>> getRecords(Integer userId) {
 		
 		return timesheetRepository.findByUserId(userId);
+	}
+
+	public boolean reject(Integer userId, String date, String status) {
+		Optional<List<TimesheetRecord>> recordOptional = timesheetRepository.findByUserId(userId);
+		if (recordOptional.isPresent())
+		{
+			List<TimesheetRecord> rl = recordOptional.get().stream()
+					.filter(_r -> _r.weekEnding.compareToIgnoreCase(date) == 0)
+					.collect(Collectors.toList());
+			if (rl.size() == 0) return false;
+			TimesheetRecord r = rl.get(0);
+			r.setApprovalStatus(status);
+			r.setSubmissionStatus("Incomplete");
+			timesheetRepository.save(r);
+			return true;
+		}
+		return false;
 	}
 	
 }

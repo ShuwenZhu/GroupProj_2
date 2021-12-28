@@ -16,6 +16,9 @@ public interface RemoteUserService {
     @GetMapping("timesheet/getUserWE")
     ResponseEntity<Optional<TimesheetRecord>> getUserWERecord(@RequestHeader Map<String, String> headers, @RequestParam("userId") Integer userId,@RequestParam("weDate") String weDate);
 
+    @GetMapping("timesheet/getUserWEByUserId")
+    public ResponseEntity<Optional<List<TimesheetRecord>>> getUserWERecord(@RequestHeader Map<String, String> headers, @RequestParam Integer userId);
+
 //
 //    @PostMapping("xxxxx")
 //    ResponseEntity<List<User>> addUser(@RequestBody User user);

@@ -2,6 +2,7 @@ import React from 'react';
 import {BrowserRouter as Router, useRoutes } from 'react-router-dom';
 import './App.css';
 import Summary from './components/Summary/Summary';
+import Profile from './components/Profile/Profile';
 import Timesheet from './components/Timesheet/Timesheet';
 import {useSelector} from "react-redux";
 import userService from "./services/UserService";

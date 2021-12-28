@@ -4,6 +4,7 @@ import com.beaconfire.week9day4composite.Domain.HousingService.House;
 import com.beaconfire.week9day4composite.Domain.MangoDBobj.TimesheetRecord;
 import com.beaconfire.week9day4composite.Domain.MangoDBobj.UserContact;
 import com.beaconfire.week9day4composite.Domain.UserHouse;
+import com.beaconfire.week9day4composite.Domain.UserWEDateDetailPack;
 import com.beaconfire.week9day4composite.Domain.UserWEDetail;
 import com.beaconfire.week9day4composite.Domain.UserService.User;
 import com.beaconfire.week9day4composite.Service.RemoteService.RemoteHousingService;
@@ -30,6 +31,11 @@ public class CompositeService {
     	Optional<TimesheetRecord> weRecord = remoteUserService.getUserWERecord(headers, userId, weDate).getBody();
         Optional<UserContact> userContact = remoteHousingService.getUserContact(headers, userId).getBody();
         
+        if (weRecord.isEmpty())
+        	System.out.println("record not found");
+        if (userContact.isEmpty())
+        	System.out.println("user not found");
+        
         
         if (weRecord.isPresent() && userContact.isPresent())
         	return UserWEDetail.builder().record(weRecord.get())
@@ -39,5 +45,27 @@ public class CompositeService {
         					  .usedVacationDays(userContact.get().getUsedVacationDays()).build();
         return null;
     }
+
+	public UserWEDateDetailPack getWEListDetail(Map<String, String> headers, Integer userId) {
+		Optional<List<TimesheetRecord>> weRecordList = remoteUserService.getUserWERecord(headers, userId).getBody();
+		Optional<UserContact> userContact = remoteHousingService.getUserContact(headers, userId).getBody();
+		
+		if (weRecordList.isEmpty())
+        	System.out.println("record not found");
+        if (userContact.isEmpty())
+        	System.out.println("user not found");
+        
+        
+        if (weRecordList.isPresent() && userContact.isPresent())
+        {
+        	return UserWEDateDetailPack.builder().records(weRecordList.get())
+        				.maxFloatDays(userContact.get().getMaxFloatDays())
+        				.maxVacationDays(userContact.get().getMaxVacationDays())
+					  	.usedFloatDays(userContact.get().getUsedFloatDays())
+					  	.usedVacationDays(userContact.get().getUsedVacationDays()).build();
+        }
+		
+		return null;
+	}
 
 }
