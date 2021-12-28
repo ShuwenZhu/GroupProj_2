@@ -28,4 +28,6 @@ public class CompositeController {
     public ResponseEntity<UserWEDetail> getWEDetail(@RequestHeader Map<String, String> headers, String weDate, Integer userId){
         return ResponseEntity.ok(compositeService.getWEDetail(headers, weDate, userId));
     }
+
+
 }

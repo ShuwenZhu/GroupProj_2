@@ -11,10 +11,12 @@
         <module name="week9day4housing" />
         <module name="week9day4eureka" />
         <module name="week9day4gateway" />
+        <module name="eureka" />
         <module name="week9day4user" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="eureka" target="1.8" />
       <module name="week9day4composite" target="1.8" />
       <module name="week9day4eureka" target="1.8" />
       <module name="week9day4gateway" target="1.8" />
@@ -24,6 +26,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="eureka" options="-parameters" />
       <module name="week9day4composite" options="-parameters" />
       <module name="week9day4eureka" options="-parameters" />
       <module name="week9day4gateway" options="-parameters" />
