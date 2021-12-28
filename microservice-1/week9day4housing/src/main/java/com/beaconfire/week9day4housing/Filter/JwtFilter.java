@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.beaconfire.week9day4housing.Domain.User;
+import com.beaconfire.week9day4housing.Service.HomeService;
 import com.beaconfire.week9day4housing.Util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -24,6 +25,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private ObjectMapper mapper;
+	
+	@Autowired
+	private HomeService homeService;
 
 	private static final String USER_KEY = "user";
 
@@ -55,20 +59,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
 			httpServletResponse.sendRedirect(
 					String.format(authService, httpServletRequest.getServerName(), httpServletRequest.getRequestURL()));
-//		} else {
-//			User user2 = (User) httpServletRequest.getSession().getAttribute(USER_KEY);
-//			if (user2 == null || user2.getId() != user.getId()) {
-//				user.setAdmin(homeService.isAdmin(user.getId()));
-//
-//				Employee employee = homeService.getEmployeeByUserId(user.getId());
-//				if (employee != null) {
-//					user.setEmployeeId(employee.getId());
-//				}
-//
-//				httpServletRequest.getSession().setAttribute(USER_KEY, user);
+		} else {
+			User user2 = (User) httpServletRequest.getSession().getAttribute(USER_KEY);
+			if (user2 == null || user2.getId() != user.getId()) {
+				user.setAdmin(true);
+
+				String employeeNM = homeService.getEmployeeByUserId(user.getId());
+				if (employeeNM != null) {
+					user.setEmployeeId(user.getId());
+				}
+
+				httpServletRequest.getSession().setAttribute(USER_KEY, user);
 			}
 			filterChain.doFilter(httpServletRequest, httpServletResponse);
-//		}
+		}
 	}
 
 	public static User getUser(HttpServletRequest httpServletRequest) {

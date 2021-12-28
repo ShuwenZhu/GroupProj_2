@@ -1,5 +1,9 @@
 {
    "id":0,
+   "usedFloatDays":3,
+   "usedVacationDays":7,
+   "maxFloatDays":3,
+   "maxVacationDays":7,
    "avatar":"AvatarAddr",
    "phoneNumber":"987-654-321",
    "addr":"AddrInfo",
