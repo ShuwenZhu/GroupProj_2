@@ -86,7 +86,7 @@ public class UserController {
     	Integer userId = Integer.parseInt(httpServletRequest.getParameter("userId"));
     	String date = httpServletRequest.getParameter("date");
     	String status = httpServletRequest.getParameter("status");
-    	if (status.compareToIgnoreCase("Approve")==0)
+    	if (status.compareToIgnoreCase("Approved")==0)
 		{
 		  if(timesheetService.approve(userId, date, status))
 			  return new ResponseMsg("succeed");

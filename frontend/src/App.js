@@ -22,7 +22,7 @@ function Routes() {
     { path: "/", element: <Summary /> },
     { path: "summary", element: <Summary />},
     { path: "timesheet", element: <Timesheet />},
-    // { path: "profile", element: <Profile />},
+    { path: "profile", element: <Profile />},
     {path: 'HRManage', element: <HRApprove/>}
   ])
   return routes;
@@ -33,7 +33,6 @@ const App = () => {
     <Router>
       <User/>
       <Routes/>
-      <Profile/>
     </Router>
   );
 };
