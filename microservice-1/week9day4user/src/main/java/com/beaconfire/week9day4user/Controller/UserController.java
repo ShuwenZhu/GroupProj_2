@@ -41,11 +41,19 @@ public class UserController {
 		return new User.Web(JwtFilter.getUser(httpServletRequest));
 	}
 
+    @GetMapping("getAllR4ApproveRecord")
+    public ResponseEntity<List<TimesheetRecord>> getAllCompletedRecord(){
+//        return ResponseEntity.ok(userService.getAllUsers());
+    	ResponseEntity<List<TimesheetRecord>> r = ResponseEntity.ok(timesheetService.findTimesheetRecordBySubmissionStatus("Completed","Approved"));
+//    	System.out.print(r.getHeaders());
+    	return r;
+//    	return ResponseEntity.ok(timesheetService.update(0, "testURL"));
+    }
 
     @GetMapping("getAllRecord")
-    public ResponseEntity getAllUsers(){
+    public ResponseEntity<List<TimesheetRecord>> getAllUsers(){
 //        return ResponseEntity.ok(userService.getAllUsers());
-    	ResponseEntity r = ResponseEntity.ok(timesheetService.getAllRecords());
+    	ResponseEntity<List<TimesheetRecord>> r = ResponseEntity.ok(timesheetService.getAllRecords());
     	System.out.print(r.getHeaders());
     	return r;
 //    	return ResponseEntity.ok(timesheetService.update(0, "testURL"));
@@ -72,16 +80,23 @@ public class UserController {
 	    return new ResponseMsg("failed");
 	}
     
-    @PostMapping("/approveStatSet")
-    public ResponseMsg approveTimesheet(HttpServletRequest httpServletRequest)
+    @PostMapping("/changeStatSet") //for hr changing user request status
+    public ResponseMsg changeTimesheetApprovalStatus(HttpServletRequest httpServletRequest)
     {
     	Integer userId = Integer.parseInt(httpServletRequest.getParameter("userId"));
     	String date = httpServletRequest.getParameter("date");
     	String status = httpServletRequest.getParameter("status");
-    	if (timesheetService.approve(userId, date, status))
-    		return new ResponseMsg("succeed");
-    	else
-    		return new ResponseMsg("failed");
+    	if (status.compareToIgnoreCase("Approve")==0)
+		{
+		  if(timesheetService.approve(userId, date, status))
+			  return new ResponseMsg("succeed");
+		}
+    	else if(status.compareToIgnoreCase("Not Approved")==0)
+    	{
+    		if(timesheetService.reject(userId,date,status))
+    			return new ResponseMsg("succeed");
+    	}
+    	return new ResponseMsg("failed updating status");
     }
     
     @GetMapping("/getUserWE")

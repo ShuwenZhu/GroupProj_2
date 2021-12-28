@@ -30,6 +30,11 @@ public class CompositeService {
     	Optional<TimesheetRecord> weRecord = remoteUserService.getUserWERecord(headers, userId, weDate).getBody();
         Optional<UserContact> userContact = remoteHousingService.getUserContact(headers, userId).getBody();
         
+        if (weRecord.isEmpty())
+        	System.out.println("record not found");
+        if (userContact.isEmpty())
+        	System.out.println("user not found");
+        
         
         if (weRecord.isPresent() && userContact.isPresent())
         	return UserWEDetail.builder().record(weRecord.get())
