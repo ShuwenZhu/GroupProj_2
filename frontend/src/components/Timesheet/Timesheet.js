@@ -2,17 +2,19 @@ import { Table, Button, DropdownButton, Dropdown, Form, Container, Row, Col } fr
 import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar';
 import TimePicker from 'react-bootstrap-time-picker';
+import { TimesheetHOC } from './TimesheetHOC';
 
 const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-class TimeSheet extends Component {
+class Timesheet extends Component {
+
   constructor(props) {
       super(props);
       this.state = {
           weekEnding: new Date("1/8/2022"),
           uploadedFormApproval: "Approved Timesheet",
-          startingTimes: ["9:00:00","9:00:00","9:00:00","9:00:00","9:00:00"],
-          endingTimes:   ["9:00:00","9:00:00","9:00:00","9:00:00","9:00:00"],
+          startingTimes: ["09:00:00","09:00:00","09:00:00","09:00:00","09:00:00"],
+          endingTimes:   ["09:00:00","09:00:00","09:00:00","09:00:00","09:00:00"],
           floatingDays: [false, false, false, false, false],
           holidays: [false, false, false, true, false],
           vacationDays: [false, false, false, false, false],
@@ -140,6 +142,41 @@ class TimeSheet extends Component {
     })
   }
 
+  handleFileSubmit = () => {
+    console.log(this.state.file);
+  }
+
+  handleTimesheetSubmit = () => {
+    let sheet = {
+      _id: null,
+      userId: this.props.userlist[0].id,
+      weekEnding: this.state.weekEnding,
+      billingHour: this.getTotalBillingHours(),
+      compensatedHour: this.getTotalCompensatedHours(),
+      attachment: null,
+      hasAttachment: this.state.file !== null,
+      submissionStatus: "Incomplete",
+      timesheet: [],
+
+    }
+
+    for(let i = 0; i < 5; i++){
+      sheet.timesheet.push({
+        date: new Date(new Date(this.state.weekEnding).setDate(this.state.weekEnding.getDate() - 5 + i)),
+        startTime: this.state.startingTimes[i],
+        endTime: this.state.endingTimes[i],
+        isFloating: this.state.floatingDays[i],
+        isHoliday: this.state.holidays[i],
+        isVacation: this.state.vacationDays[i]
+      })
+    }
+
+    for(let i = 0; i < 5; i++){
+      console.log(sheet.timesheet[i].startTime);
+    }
+    
+  }
+
   render() {
     return (
       <>
@@ -210,7 +247,7 @@ class TimeSheet extends Component {
             <Col>
             </Col>
             <Col>
-              <Button variant="primary" /*onClick={ save current Timesheet }*/>
+              <Button variant="primary" onClick={ () => this.handleTimesheetSubmit() }>
                 Submit
               </Button>            
             </Col>
@@ -236,7 +273,7 @@ class TimeSheet extends Component {
             <Col>
             </Col>
             <Col>
-              <Button>
+              <Button onClick={() => this.handleFileSubmit()}>
                 Submit
               </Button>
             </Col>
@@ -247,4 +284,4 @@ class TimeSheet extends Component {
   }
 }
 
-export default TimeSheet;
+export default TimesheetHOC(Timesheet);
