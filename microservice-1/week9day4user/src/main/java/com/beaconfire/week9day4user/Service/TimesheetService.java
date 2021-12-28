@@ -101,5 +101,9 @@ public class TimesheetService {
 		}
 		return false;
 	}
+
+	public void update(TimesheetRecord ts) {
+		timesheetRepository.save(ts);
+	}
 	
 }
