@@ -28,4 +28,6 @@ public class CompositeController {
 //    	System.out.println("****************" + weDate + " " + userId);
         return ResponseEntity.ok(compositeService.getWEDetail(headers, weDate, userId));
     }
+
+
 }

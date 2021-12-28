@@ -146,6 +146,10 @@ class Timesheet extends Component {
     console.log(this.state.file);
   }
 
+  handleSetDefault = () => {
+    console.log("setting default");
+  }
+
   handleTimesheetSubmit = () => {
     let sheet = {
       _id: null,
@@ -172,7 +176,7 @@ class Timesheet extends Component {
     }
 
     for(let i = 0; i < 5; i++){
-      console.log(sheet.timesheet[i].startTime);
+      console.log(sheet.timesheet[i].date);
     }
     
   }
@@ -240,7 +244,7 @@ class Timesheet extends Component {
         <Container>
           <Row>
             <Col>
-              <Button variant="secondary" /*onClick={ set current timesheet as reusable template}*/>
+              <Button variant="secondary" onClick={() => this.handleSetDefault()}>
                 Set Default
               </Button> 
             </Col>

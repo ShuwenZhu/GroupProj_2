@@ -9,7 +9,6 @@ export const TimesheetHOC = (WrappedComponent) => {
         
         return <WrappedComponent userlist={userlist} {...props} />
             
-        
     }
 
-}
+} 
