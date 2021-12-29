@@ -6,7 +6,7 @@ const GET_USER_URL = 'http://localhost:9000/timesheet/whoami'
 const LOG_OUT_URL = 'http://localhost:9999/logout?redirect=http://localhost:3000';
 
 const transport = axios.create({
-    withCredentials: true
+    
 })
 
 class UserService {
@@ -29,7 +29,7 @@ class UserService {
                 // console.log(res.data)
                 store.dispatch(addUserS(res.data))
             })
-            .catch(err => { window.location.href = API_BASE_URL })
+            //.catch(err => { window.location.href = API_BASE_URL })
     }
 
 }

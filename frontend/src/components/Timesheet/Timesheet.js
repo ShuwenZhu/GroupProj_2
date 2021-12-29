@@ -19,13 +19,15 @@ class Timesheet extends Component {
           floatingDays: [false, false, false, false, false],
           holidays: [false, false, false, true, false],
           vacationDays: [false, false, false, false, false],
-          file: null
+          file: null,
+          data: null
       }
   }
   componentDidMount() {
 
     // load default timesheet for user
-    TimesheetService.fetchTimesheet(); 
+    let data = TimesheetService.fetchTimesheet();     
+    this.setState({data: data});
   }
 
   getTotalBillingHours = () => {
@@ -149,7 +151,7 @@ class Timesheet extends Component {
   }
 
   handleSetDefault = () => {
-    console.log("setting default");
+    console.log(this.state.data);
   }
 
   handleTimesheetSubmit = () => {

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,9 @@ public class CompositeController {
     
     @GetMapping("getWeekEndListWithDayInfo")
     public ResponseEntity<UserWEDateDetailPack> getWEListDetail(@RequestHeader Map<String, String> headers, Integer userId){
-        return ResponseEntity.ok(compositeService.getWEListDetail(headers, userId));
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        responseHeaders.set("Access-Control-Allow-Credentials", "true");
+        return ResponseEntity.ok().headers(responseHeaders).body(compositeService.getWEListDetail(headers, userId));
     }
 }
