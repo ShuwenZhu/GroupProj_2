@@ -87,6 +87,13 @@ public class UserController {
     	timesheetService.update(ts);
     }
     
+    @PostMapping("/updateList")
+    public void updateTimesheetList(List<TimesheetRecord> ts)
+    {
+    	System.out.println("received Request for default update");
+    	timesheetService.updateList(ts);
+    }
+    
     @PostMapping("/changeStatSet") //for hr changing user request status
     public ResponseMsg changeTimesheetApprovalStatus(HttpServletRequest httpServletRequest)
     {
