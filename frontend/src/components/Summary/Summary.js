@@ -54,15 +54,6 @@ class Summary extends Component {
         }  
     }
 
-    // commentStatus(p){
-    //     let comment = this.comment(p); 
-    //     if (comment === ""){
-    //         return <td>{this.comment(p)}</td>
-    //     }
-        
-    //     return <td>{this.comment(p)}<Popup content='???' trigger={<But>!</But>} /></td>
-    // }
-
     comment(p){
         let floating = 0;
         let vacation = 0;
