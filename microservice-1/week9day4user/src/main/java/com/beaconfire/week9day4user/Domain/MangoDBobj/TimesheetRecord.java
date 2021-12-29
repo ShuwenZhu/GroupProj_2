@@ -35,7 +35,7 @@ public class TimesheetRecord implements Serializable {
 	
 	public String attachment;
 	
-	public boolean fileApproved;
+	public boolean isApprovedAttachment;
 	
 	public String submissionStatus;
 	
