@@ -39,8 +39,8 @@ public class ScheduledTask {
         {
         	defaultList.add(Timesheet.builder()
             		.date(now.minusDays(i).format(formatter))
-            		.startTime("9:00")
-            		.endTime("18:00")
+            		.startTime("09:00:00")
+            		.endTime("18:00:00")
             		.isFloating(false)
             		.isHoliday(false)
             		.isVacation(false)
