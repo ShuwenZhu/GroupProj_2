@@ -1,6 +1,8 @@
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Row } from 'react-bootstrap';
 import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar';
+import {store} from "../../redux/store";
+import ProfileService from "../../services/ProfileService";
 // import { View, ScrollView, Text, StyleSheet } from 'react-native';
 // import { Avatar } from 'react-native-elements';
 
@@ -8,7 +10,10 @@ import NavBar from '../NavBar/NavBar';
     class Profile extends React.Component {
         constructor(props) {
           super(props);
-          this.state = {value: ''};
+          this.state = {
+            data: [],
+            numberOfEmergencyContact: 2,
+          };
       
           this.handleChange = this.handleChange.bind(this);
           this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,12 +27,61 @@ import NavBar from '../NavBar/NavBar';
           alert('A name was submitted: ' + this.state.value);
           event.preventDefault();
         }
+
+        componentDidMount() {
+          // send HTTP request
+          // save it to the state
+          store.subscribe(
+            ()=> ProfileService.fetchData(store.getState().user[0].id)
+                .then(
+                    (response) => this.setState({ data: response.data})
+                    )
+            );
+      }
       
         render() {
-          return (
-            <>
-            <NavBar></NavBar>
-            <form onSubmit={this.handleSubmit}>
+          
+          if (this.state.data.length === 0) {
+            return (
+                <>    
+                <NavBar/>            
+                <>No available data</>
+                </>
+            )
+         }else
+         {
+          console.log('data')
+          console.log(this.state.data)
+          return <>
+              <NavBar/>
+              <form>
+              <div>
+                Contact<br/><br/>
+                
+                {this.state.data.phoneNumber}<br/><br/>
+                {this.state.data.email}<br/><br/>
+                {this.state.data.addr}<br/><br/>
+                
+              </div>
+              <br/>
+              {this.state.data.emergencyContact.map(
+                ecinfo => {
+                  
+                }
+              )}
+              emergencyContact
+              <br/>
+
+              </form>
+          </>
+         }
+        }
+      }
+        
+      
+
+
+            {/* <form onSubmit={this.handleSubmit}>
               <label>
                 Contact<br></br>
                 <input type="text" value={this.state.value} onChange={this.handleChange} /><br></br>
@@ -39,21 +93,26 @@ import NavBar from '../NavBar/NavBar';
               </label>
               <br></br>
               <label>
-                Emergency Contact<br></br>
+                Emergency Contact1<br></br>
                 <input type="text" value={this.state.value} onChange={this.handleChange} /><br></br>
                 <br></br>
                 <input type="text" value={this.state.value} onChange={this.handleChange} /><br></br>
                 <br></br>
-                
               </label>
-              
+              <br></br>
+              <label>
+                Emergency Contact2<br></br>
+                <input type="text" value={this.state.value} onChange={this.handleChange} /><br></br>
+                <br></br>
+                <input type="text" value={this.state.value} onChange={this.handleChange} /><br></br>
+                <br></br>
+              </label>
             <br></br>
             <input type="submit" value="Submit" /> 
-            </form>
-            </>
+            </form> */}
+          
             
-          )
-        }
-      }
+          
+       
 
       export default Profile
