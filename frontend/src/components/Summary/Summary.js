@@ -2,10 +2,10 @@ import { Table, Button } from 'react-bootstrap';
 import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar';
 import SummaryService from '../../services/SummaryService';
+import ProfileService from '../../services/ProfileService';
 import {store} from "../../redux/store";
 import { Popup, Button as But } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css'
-import {Router, Route, Link, RouteHandler} from 'react-router';
 
 class Summary extends Component {
     constructor(props) {
@@ -14,12 +14,12 @@ class Summary extends Component {
         this.state = {
             data: [],
             numberOfSummary: 5,
+            contact: [],
         }
     }
     componentDidMount() {
         store.subscribe(()=> SummaryService.fetchTimesheet(store.getState().user[0].id).then((response) => this.setState({ data: response.data })));
-        
-        
+        store.subscribe(()=> ProfileService.fetchData(store.getState().user[0].id).then((response) => this.setState({ contact: response.data })));
     }
     showMore(){
         if(this.state.numberOfSummary < this.state.data.length){
@@ -43,10 +43,10 @@ class Summary extends Component {
     }
 
     approvalStatus(p){     
-        if(p.isApprovedAttachment){
+        if(p.approvalStatus === "Approved"){
             return <p>Approved</p>
         }
-        else if(!p.isApprovedAttachment){
+        else if(p.approvalStatus === "Not Approved"){
             return <p>Not Approved <Popup content='Approval denied by Admin, please contact your HR manager' trigger={<But>!</But>}/></p>
         }
         else{
@@ -54,20 +54,14 @@ class Summary extends Component {
         }  
     }
 
-    commentStatus(p){
-        let comment = this.comment(p); 
-        if (comment === ""){
-            return <td>{this.comment(p)}</td>
-        }
-        return <td>{this.comment(p)}<Popup content='???' trigger={<But>!</But>} /></td>
-    }
-
     comment(p){
         let floating = 0;
         let vacation = 0;
         let holiday = 0;
 
-        let comment = "";
+        let year = p.weekEnding.split("/")[2];
+        let floatingLeftOver = this.state.contact.maxFloatDays - this.state.contact.usedFloatDays;
+        let vacationLeftOver = this.state.contact.maxVacationDays - this.state.contact.usedVacationDays;
 
         for(let i = 0; i < p.timesheet.length; i++){
             if(p.timesheet[i].isFloating === true){
@@ -80,24 +74,45 @@ class Summary extends Component {
                 holiday += 1;
             }
         }
-        if(floating > 0){
-            comment += floating + " floating day(s) required ";
+
+        if(floating > 0 && vacation > 0 && holiday > 0){
+            return <p><p>{floating} floating day(s) required Popup content={"Total floating days left in " + year + ": " + floatingLeftOver + " days"} trigger={<But>!</But>} /></p>
+            <p>{vacation} vacation day(s) required <Popup content={"Total vacation days left in " + year + ": " + vacationLeftOver + " days"} trigger={<But>!</But>} /></p>
+            <p>{holiday} holiday day(s) were included </p>
+            </p>;
         }
-        if(vacation > 0){
-            comment += vacation + " vacation day(s) required ";
+        else if(floating > 0 && vacation > 0){
+            return <p><p>{floating} floating day(s) required <Popup content={"Total floating days left in " + year + ": " + floatingLeftOver + " days"} trigger={<But>!</But>} /></p>
+            <p>{vacation} vacation day(s) required <Popup content={"Total vacation days left in " + year + ": " + vacationLeftOver + " days"} trigger={<But>!</But>} /></p>
+            </p>;
         }
-        if(holiday > 0){
-            comment += holiday + " holiday day(s) were included ";
+        else if(floating > 0 && holiday > 0){
+            return <p><p>{floating} floating day(s) required <Popup content={"Total floating days left in " + year + ": " + floatingLeftOver + " days"} trigger={<But>!</But>} /></p>
+            <p>{holiday} holiday day(s) were included </p>
+            </p>;
         }
-        return comment;
+        else if(vacation > 0 && holiday > 0){
+            return <p><p>{vacation} vacation day(s) required <Popup content={"Total vacation days left in " + year + ": " + vacationLeftOver + " days"} trigger={<But>!</But>} /></p>
+            <p>{holiday} holiday day(s) were included </p></p>;
+        }
+
+        else if(floating > 0){
+            return <p>{floating} floating day(s) required <Popup content={"Total floating days left in " + year + ": " + floatingLeftOver + " days"} trigger={<But>!</But>} /></p>;
+        }
+        else if(vacation > 0){
+            return <p>{vacation} vacation day(s) required <Popup content={"Total vacation days left in " + year + ": " + vacationLeftOver + " days"} trigger={<But>!</But>} /></p>;
+        }
+        else if(holiday > 0){
+            return <p>{holiday} holiday day(s) were included</p>;
+        }
     }
 
     option(p){
-        if(p.isApprovedAttachment){
+        if(p.approvalStatus === "Approved" && p.submissionStatus == "Completed"){
             return <Button variant= "primary" onClick={() => this.redirectTimesheet(p)}>View</Button>
         }
         else{
-            return <Button variant= "primary" onClick={() => this.redirectTimesheet(p)} >Edit</Button>
+            return <Button variant= "primary" onClick={() => this.redirectTimesheet(p)}>Edit</Button>
         }
     }
 
@@ -131,12 +146,9 @@ class Summary extends Component {
                             
                             <td>{this.submissionStatus(p)}</td>
                             <td>{this.approvalStatus(p)}</td>
-
                             <td>{this.option(p)}</td>
-                            
-                            <td>{this.commentStatus(p)}</td>
+                            <td>{this.comment(p)}</td>
 
-                            
                         </tr>)}
                     </tbody>
                 </Table>
