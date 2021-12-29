@@ -7,6 +7,7 @@ import com.beaconfire.week9day4housing.Service.UserContactService;
 import com.beaconfire.week9day4housing.Util.AmazonS3Util;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class HousingController {
 	private AmazonS3Util amazonS3Util;
 
     @GetMapping("getAll")
-    public ResponseEntity getAll(){
+    public ResponseEntity<List<UserContact>> getAll(){
         return ResponseEntity.ok(userContactService.findAll());
     }
     
