@@ -2,7 +2,6 @@ import React, { Component }  from 'react';
 import NavBar from "../NavBar/NavBar";
 import {Table} from "react-bootstrap";
 import HRService from "../../services/HRService";
-import {configureStore} from "@reduxjs/toolkit";
 
 class HRApprove extends Component {
 
@@ -99,7 +98,7 @@ class HRApprove extends Component {
                 {this.state.data &&
                 this.state.data.map(row => {
                     if (row.approvalStatus && row.approvalStatus === 'N/A')
-                    return <tr align='right'>
+                    return <tr align='right' key={row.userId}>
                         <td>{row.userId}</td>
                         <td>{row.weekEnding}</td>
                         <td>{row.compensatedHour}</td>
@@ -110,6 +109,8 @@ class HRApprove extends Component {
                             <button className='btn-secondary' onClick={() => this.rejectUpdate(row)}>Reject</button>
                         </div></td>
                     </tr>
+                    else
+                        return <></>
                 })}
                 </tbody>
             </Table>
