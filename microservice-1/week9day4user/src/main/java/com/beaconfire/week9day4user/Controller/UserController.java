@@ -60,9 +60,10 @@ public class UserController {
     }
     
     @PostMapping("/uploadDocument")
-	public ResponseMsg uploadAvatarFile(HttpServletRequest httpServletRequest, @RequestParam("file") MultipartFile file) {
-		Integer userId = Integer.parseInt(httpServletRequest.getParameter("userId"));
-		String date = httpServletRequest.getParameter("date");
+	public ResponseMsg uploadAvatarFile(HttpServletRequest httpServletRequest, 
+			@RequestParam("file") MultipartFile file,
+			@RequestParam("date") String date,
+			@RequestParam("userId") Integer userId) {
 		System.out.println("uploading document for " + userId);
 		String url = "";
 	    if (file != null)
@@ -71,14 +72,27 @@ public class UserController {
 				url = amazonS3Util.uploadMultipartFile(httpServletRequest, file, "file");
 //				System.out.println(url);
 //				personalInfoService.updateAvatarInfo(email, url);
-				timesheetService.update(userId, date, url);
-				return new ResponseMsg(url);
+				if (timesheetService.update(userId, date, url))
+					return new ResponseMsg(url);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 	    }
 	    return new ResponseMsg("failed");
 	}
+    
+    @PostMapping("/update")
+    public void updateTimesheet(@RequestParam("timesheet") TimesheetRecord ts)
+    {
+    	timesheetService.update(ts);
+    }
+    
+    @PostMapping("/updateList")
+    public void updateTimesheetList(List<TimesheetRecord> ts)
+    {
+    	System.out.println("received Request for default update");
+    	timesheetService.updateList(ts);
+    }
     
     @PostMapping("/changeStatSet") //for hr changing user request status
     public ResponseMsg changeTimesheetApprovalStatus(HttpServletRequest httpServletRequest)
@@ -106,8 +120,10 @@ public class UserController {
     }
     
     @GetMapping("/getUserWEByUserId")
-    public ResponseEntity<Optional<List<TimesheetRecord>>> getUserWERecord(@RequestParam Integer userId)
+    public ResponseEntity<Optional<List<TimesheetRecord>>> getUserWERecord(@RequestHeader Map<String, String> headers, @RequestParam Integer userId)
     {
     	return ResponseEntity.ok(timesheetService.getRecords(userId));
     }
+
+
 }

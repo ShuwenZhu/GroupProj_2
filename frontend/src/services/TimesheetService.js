@@ -1,11 +1,23 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:9000/';
-class ApiService {
+const API_BASE_URL = 'http://localhost:9999/login?redirect=http://localhost:3000';
+const GET_USER_URL = 'http://localhost:9000/timesheet/whoami'
+const GET_COMPOSITE_URL = 'http://localhost:9000/composite-service/getWeekEndListWithDayInfo?userId=1'
+
+const transport = axios.create({
+    withCredentials: true
+})
+
+class TimesheetService {
     fetchTimesheet(){
-        // return fetch(API_BASE_URL + 'posts').then((response) => response.json());
-        return axios.get(API_BASE_URL + 'timesheet-service/getTimesheet/' + numberOfSummary);
+        return transport
+            .get(GET_COMPOSITE_URL)
+            .then(res => {
+                console.log(res.data);
+                return res.data;
+            })
     }
 
+
 }
-export default new ApiService();
+export default new TimesheetService();

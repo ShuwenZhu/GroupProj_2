@@ -1,6 +1,5 @@
 package com.beaconfire.week9day4composite.Service;
 
-import com.beaconfire.week9day4composite.Domain.HousingService.House;
 import com.beaconfire.week9day4composite.Domain.MangoDBobj.TimesheetRecord;
 import com.beaconfire.week9day4composite.Domain.MangoDBobj.UserContact;
 import com.beaconfire.week9day4composite.Domain.UserHouse;
@@ -66,6 +65,20 @@ public class CompositeService {
         }
 		
 		return null;
+	}
+	
+	public boolean AssignDefaultTimesheet(TimesheetRecord drecord)
+	{
+//		List<UserContact> userContactlist = remoteHousingService.getAll().getBody();
+//		List<TimesheetRecord> records = new ArrayList<>();
+//		for (UserContact c : userContactlist)
+//		{
+//			drecord.setUserId(c.getUserId());
+//			records.add(drecord);
+//		}
+//		records.add(drecord);
+//		remoteUserService.updateTimesheet(drecord);
+		return true;
 	}
 
 }

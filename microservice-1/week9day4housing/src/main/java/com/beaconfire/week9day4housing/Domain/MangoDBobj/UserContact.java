@@ -22,6 +22,8 @@ public class UserContact implements Serializable{
 	@Id
 	public String _id;
 	
+	public String email;
+	
 	public Integer userId;
 	
 	public String addr;

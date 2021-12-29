@@ -5,17 +5,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.beaconfire.week9day4user.DAO.TimesheetRepository;
 import com.beaconfire.week9day4user.Domain.MangoDBobj.TimesheetRecord;
+import com.beaconfire.week9day4user.Domain.responseObjects.SimpleMessage;
 
 @Service
 public class TimesheetService {
 	
 	@Autowired
 	private TimesheetRepository timesheetRepository;
+	
+	private RabbitTemplate rabbitTemplate;
+	
+	@Autowired
+    public void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
 	
 	public List<TimesheetRecord> getAllRecords()
 	{
@@ -58,6 +67,13 @@ public class TimesheetService {
 			TimesheetRecord r = rl.get(0);
 			r.setApprovalStatus(status);
 			timesheetRepository.save(r);
+			System.out.println("********** Sending msg: " + r.getUserId() + " " + r.getWeekEnding());
+			SimpleMessage newMessage = SimpleMessage.builder()
+	                .title("Approved")
+	                .userId(r.getUserId() + "")
+	                .weDate(r.getWeekEnding())
+	                .build();
+			rabbitTemplate.convertAndSend("amq.direct", "q1", newMessage.toString());
 			return true;
 		}
 		return false;
@@ -81,8 +97,14 @@ public class TimesheetService {
 	}
 
 	public Optional<List<TimesheetRecord>> getRecords(Integer userId) {
-		
-		return timesheetRepository.findByUserId(userId);
+		Optional<List<TimesheetRecord>> res = timesheetRepository.findByUserId(userId);
+		TimesheetRecord template = timesheetRepository.findByUserId(-1).get().get(0);
+		for (TimesheetRecord r : res.get())
+			if (r.getWeekEnding().compareToIgnoreCase(template.getWeekEnding()) == 0)
+				return res;
+		template.setUserId(userId);
+		res.get().add(template);
+		return res;
 	}
 
 	public boolean reject(Integer userId, String date, String status) {
@@ -100,6 +122,16 @@ public class TimesheetService {
 			return true;
 		}
 		return false;
+	}
+
+	public void update(TimesheetRecord ts) {
+		timesheetRepository.save(ts);
+	}
+
+	public void updateList(List<TimesheetRecord> ts) {
+		for (TimesheetRecord r : ts)
+			System.out.println(r.toString());
+		timesheetRepository.saveAll(ts);
 	}
 	
 }
