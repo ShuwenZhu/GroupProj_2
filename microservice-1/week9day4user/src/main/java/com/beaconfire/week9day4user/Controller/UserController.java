@@ -114,7 +114,7 @@ public class UserController {
     }
     
     @GetMapping("/getUserWEByUserId")
-    public ResponseEntity<Optional<List<TimesheetRecord>>> getUserWERecord(@RequestParam Integer userId)
+    public ResponseEntity<Optional<List<TimesheetRecord>>> getUserWERecord(@RequestHeader Map<String, String> headers, @RequestParam Integer userId)
     {
     	return ResponseEntity.ok(timesheetService.getRecords(userId));
     }
