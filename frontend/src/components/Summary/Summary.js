@@ -131,12 +131,9 @@ class Summary extends Component {
                             
                             <td>{this.submissionStatus(p)}</td>
                             <td>{this.approvalStatus(p)}</td>
-
                             <td>{this.option(p)}</td>
-                            
                             <td>{this.commentStatus(p)}</td>
 
-                            
                         </tr>)}
                     </tbody>
                 </Table>
