@@ -135,4 +135,13 @@ public class HousingController {
     			addr, em1f, em1l, em1p, em2f, em2l, em2p);
     	return new ResponseMsg("success");
 	}
+    
+    @GetMapping("/updateDayUsage")
+	public ResponseMsg updateDayUsage(
+			@RequestParam Integer userId,
+			@RequestParam Integer floatday,
+			@RequestParam Integer vacationday){
+    	userContactService.updateUserDayUsage(userId,floatday,vacationday);
+    	return new ResponseMsg("success");
+    }
 }
