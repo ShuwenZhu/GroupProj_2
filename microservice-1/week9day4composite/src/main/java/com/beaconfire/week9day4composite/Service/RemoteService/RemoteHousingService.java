@@ -2,6 +2,7 @@ package com.beaconfire.week9day4composite.Service.RemoteService;
 
 import com.beaconfire.week9day4composite.Domain.MangoDBobj.TimesheetRecord;
 import com.beaconfire.week9day4composite.Domain.MangoDBobj.UserContact;
+import com.beaconfire.week9day4composite.Domain.responseObjects.ResponseMsg;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -20,4 +21,9 @@ public interface RemoteHousingService {
     @GetMapping("usercontact/getAll")
     public ResponseEntity<List<UserContact>> getAll();
 
+    @PostMapping("usercontact/update")
+	public ResponseMsg updateUserContact(
+			@RequestHeader Map<String, String> headers, 
+			@RequestParam("user") UserContact user);
+	
 }
