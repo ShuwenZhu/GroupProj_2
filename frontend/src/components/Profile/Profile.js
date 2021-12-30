@@ -1,12 +1,10 @@
-import { Form, Button, DropdownButton, Dropdown, Container, Row, Col } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, View, Image, StyleSheet } from 'react-bootstrap';
 import React, { Component } from 'react'
 import NavBar from '../NavBar/NavBar';
 import {store} from "../../redux/store";
 import ProfileService from "../../services/ProfileService";
-// import { View, ScrollView, Text, StyleSheet } from 'react-native';
-// import { Avatar } from 'react-native-elements';
 
-
+//const IMAGE_EX = 'https://preview.redd.it/dm4yvdcd11771.jpg?width=360&format=pjpg&auto=webp&s=ddd96212d2b35ede767845b7a26cfac5e6276cda';
     class Profile extends React.Component {
         constructor(props) {
           super(props);
@@ -89,19 +87,34 @@ import ProfileService from "../../services/ProfileService";
 
         handleSubmit(event) {
           event.preventDefault();
-          this.state.data.phoneNumber = this.state.temp1;
-          this.state.data.email = this.state.temp2;
-          this.state.data.addr = this.state.temp3;
+          ProfileService.updateContact(
+            this.state.data.userId,
+            this.state.temp1,
+            this.state.temp2,
+            this.state.temp3,
+            this.state.EC1FN,
+            this.state.EC1LN,
+            this.state.EC1Contact,
+            this.state.EC2FN,
+            this.state.EC2LN,
+            this.state.EC2Contact,
+             );
 
-          this.state.data.emergencyContact[0].firstName = this.state.EC1FN;
-          this.state.data.emergencyContact[0].lastName = this.state.EC1LN;
-          this.state.data.emergencyContact[0].contactNumber = this.state.EC1Contact;
 
-          this.state.data.emergencyContact[1].firstName = this.state.EC2FN;
-          this.state.data.emergencyContact[1].lastName = this.state.EC2LN;
-          this.state.data.emergencyContact[1].contactNumber = this.state.EC2Contact;
 
-          console.log(this.state.data);
+          // this.state.data.phoneNumber = this.state.temp1;
+          // this.state.data.email = this.state.temp2;
+          // this.state.data.addr = this.state.temp3;
+
+          // this.state.data.emergencyContact[0].firstName = this.state.EC1FN;
+          // this.state.data.emergencyContact[0].lastName = this.state.EC1LN;
+          // this.state.data.emergencyContact[0].contactNumber = this.state.EC1Contact;
+
+          // this.state.data.emergencyContact[1].firstName = this.state.EC2FN;
+          // this.state.data.emergencyContact[1].lastName = this.state.EC2LN;
+          // this.state.data.emergencyContact[1].contactNumber = this.state.EC2Contact;
+
+          // console.log(this.state.data);
         }
 
         handleFileChange = (e) => {
@@ -169,12 +182,12 @@ import ProfileService from "../../services/ProfileService";
                 <>No available data</>
                 </>
             )
-         }else
-         {
+         }else{
           // console.log('data')
           // console.log(this.state.data)
           return <>
               <NavBar/>
+              <img src= "https://preview.redd.it/dm4yvdcd11771.jpg?width=360&format=pjpg&auto=webp&s=ddd96212d2b35ede767845b7a26cfac5e6276cda"/>
               <form onSubmit={this.handleSubmit} style={{
                 margin: 100
               }}>
