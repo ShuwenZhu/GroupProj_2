@@ -4,6 +4,8 @@ import NavBar from '../NavBar/NavBar';
 import TimePicker from 'react-bootstrap-time-picker';
 import { TimesheetHOC } from './TimesheetHOC';
 import TimesheetService from '../../services/TimesheetService';
+import ProfileService from '../../services/ProfileService';
+import {store} from "../../redux/store";
 
 const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
@@ -19,13 +21,15 @@ class Timesheet extends Component {
           floatingDays: [false, false, false, false, false],
           holidays: [false, false, false, true, false],
           vacationDays: [false, false, false, false, false],
-          file: null
+          file: null,
+          contact: [],
       }
   }
   componentDidMount() {
 
     // load default timesheet for user
     TimesheetService.fetchTimesheet(); 
+    store.subscribe(()=> ProfileService.fetchData(store.getState().user[0].id).then((response) => this.setState({ contact: response.data })));
   }
 
   getTotalBillingHours = () => {
@@ -148,8 +152,8 @@ class Timesheet extends Component {
     console.log(this.state.file);
   }
 
-  handleSetDefault = () => {
-    console.log("setting default");
+  handleSetDefault = (start, end) => {
+    ProfileService.updateSetDefault(store.getState().user[0].id, start, end);
   }
 
   handleTimesheetSubmit = () => {
@@ -246,7 +250,7 @@ class Timesheet extends Component {
         <Container>
           <Row>
             <Col>
-              <Button variant="secondary" onClick={() => this.handleSetDefault()}>
+              <Button variant="secondary" onClick={() => this.handleSetDefault(this.state.startingTimes, this.state.endingTimes)}>
                 Set Default
               </Button> 
             </Col>
