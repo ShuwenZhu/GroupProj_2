@@ -79,10 +79,10 @@ public class HousingController {
 	    return new ResponseMsg("failed");
 	}
     
-    @PutMapping(value = "/update", consumes = "application/json")
-	public ResponseEntity<String> updateUserContact(@RequestBody UserContact user, HttpServletResponse response)
+    @GetMapping(value = "/update")
+	public ResponseEntity<String> updateUserContact(@RequestBody UserContact user)
 	{
-    	response.setHeader("Access-Control-Allow-Credentials", "true");
+//    	response.setHeader("Access-Control-Allow-Credentials", "true");
     	System.out.println(">>>>>>>>CALLED USERCONTACT POST USERCONTACT METHOD");
     	System.out.println(user);
 //    	try {
@@ -96,6 +96,25 @@ public class HousingController {
 //		}  
 //    	userContactService.UpdateUserInfo(user);
     	return ResponseEntity.ok("success");
+	}
+    
+    @GetMapping(value = "/updateDefault")
+	public ResponseEntity<String> updateUserContactDefault(
+			@RequestParam Integer userId,
+			@RequestParam String s1,
+			@RequestParam String s2,
+			@RequestParam String s3,
+			@RequestParam String s4,
+			@RequestParam String s5,
+			@RequestParam String e1,
+			@RequestParam String e2,
+			@RequestParam String e3,
+			@RequestParam String e4,
+			@RequestParam String e5
+			)
+	{
+    	userContactService.updateDefault(userId, s1, s2, s3, s4, s5, e1, e2, e3, e4, e5);
+		return ResponseEntity.ok("success");	
 	}
     
     @GetMapping("/update")
