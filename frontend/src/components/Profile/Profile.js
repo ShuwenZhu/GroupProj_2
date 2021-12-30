@@ -4,7 +4,7 @@ import NavBar from '../NavBar/NavBar';
 import {store} from "../../redux/store";
 import ProfileService from "../../services/ProfileService";
 
-//const IMAGE_EX = 'https://preview.redd.it/dm4yvdcd11771.jpg?width=360&format=pjpg&auto=webp&s=ddd96212d2b35ede767845b7a26cfac5e6276cda';
+const IMAGE_EX = "https://preview.redd.it/dm4yvdcd11771.jpg?width=360&format=pjpg&auto=webp&s=ddd96212d2b35ede767845b7a26cfac5e6276cda";
     class Profile extends React.Component {
         constructor(props) {
           super(props);
@@ -19,6 +19,9 @@ import ProfileService from "../../services/ProfileService";
             EC2LN:"",
             EC2Contact:"",
             file:null,
+            filePath:"",
+            autoImage: true,
+            imageExample:"https://preview.redd.it/dm4yvdcd11771.jpg?width=360&format=pjpg&auto=webp&s=ddd96212d2b35ede767845b7a26cfac5e6276cda",
             data: [],
             displaystate: true,
             numberOfEmergencyContact: 2,
@@ -37,6 +40,8 @@ import ProfileService from "../../services/ProfileService";
           this.handleEC2LNChange = this.handleEC2LNChange.bind(this);
           this.handleEC2ContactChange = this.handleEC2ContactChange.bind(this);
 
+          this.handleFileChange = this.handleFileChange.bind(this);
+          this.handleFileSubmit = this.handleFileSubmit.bind(this);
           this.handleSubmit = this.handleSubmit.bind(this);
           this.handleClick = this.handleClick.bind(this);
         }
@@ -117,13 +122,19 @@ import ProfileService from "../../services/ProfileService";
           // console.log(this.state.data);
         }
 
-        handleFileChange = (e) => {
+        handleFileChange(event) {
           this.setState({
-            file: e.target.files[0]
+            file: URL.createObjectURL(event.target.files[0]),
+            // file: e.target.files[0],
+            // imageExample: e.target.files[0]
           })
         }
 
-        handleFileSubmit = () => {
+        handleFileSubmit = (event) => {
+          this.setState({
+            autoImage: !this.state.autoImage,
+          });
+          // this.state.autoImage = false;
           this.state.data.avatar = this.state.file;
           console.log(this.state.data.avatar);
         }
@@ -187,10 +198,9 @@ import ProfileService from "../../services/ProfileService";
           // console.log(this.state.data)
           return <>
               <NavBar/>
-              <img src= "https://preview.redd.it/dm4yvdcd11771.jpg?width=360&format=pjpg&auto=webp&s=ddd96212d2b35ede767845b7a26cfac5e6276cda"/>
-              <form onSubmit={this.handleSubmit} style={{
-                margin: 100
-              }}>
+              <img src= {this.state.imageExample} hidden={!this.state.autoImage}/>
+              <img src= {this.state.file} hidden={this.state.autoImage}/>
+              <form onSubmit={this.handleSubmit} style={{margin: 100}}>
                 
                 <h3><b>Contact</b></h3>
 
@@ -300,14 +310,15 @@ import ProfileService from "../../services/ProfileService";
               <Container>
           <Row>
             <Col xs={6}>
-              <Form.Group controlId="formFileSm" className="mb-3" onChange={(e) => this.handleFileChange(e)}>
+              <Form.Group controlId="formFileSm" className="mb-3" onChange={this.handleFileChange}>
                 <Form.Control type="file" />
+                <img src={this.state.file} hidden={!this.state.autoImage}/>
               </Form.Group>
             </Col>
             <Col>
             </Col>
             <Col>
-              <Button onClick={() => this.handleFileSubmit()}>
+              <Button onClick={this.handleFileSubmit}>
                 Submit
               </Button>
             </Col>
