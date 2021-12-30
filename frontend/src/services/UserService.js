@@ -29,7 +29,7 @@ class UserService {
                 // console.log(res.data)
                 store.dispatch(addUserS(res.data))
             })
-            .catch(err => { window.location.href = API_BASE_URL })
+            //.catch(err => { window.location.href = API_BASE_URL })
     }
 
 }

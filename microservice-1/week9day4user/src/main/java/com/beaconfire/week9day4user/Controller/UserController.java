@@ -38,6 +38,7 @@ public class UserController {
     
     @GetMapping("/whoami")
 	public User.Web whoami(HttpServletRequest httpServletRequest) {
+
 		return new User.Web(JwtFilter.getUser(httpServletRequest));
 	}
 

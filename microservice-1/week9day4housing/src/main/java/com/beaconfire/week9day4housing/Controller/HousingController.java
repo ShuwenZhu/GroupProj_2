@@ -98,7 +98,7 @@ public class HousingController {
     	return ResponseEntity.ok("success");
 	}
     
-    @GetMapping(value = "/updateDefault")
+    @PostMapping(value = "/updateDefault")
 	public ResponseEntity<String> updateUserContactDefault(
 			@RequestParam Integer userId,
 			@RequestParam String s1,
