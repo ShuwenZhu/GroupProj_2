@@ -133,5 +133,13 @@ public class TimesheetService {
 			System.out.println(r.toString());
 		timesheetRepository.saveAll(ts);
 	}
+
+	public void updateTimesheet(Integer userId, String weDate, String sbStats, boolean approvedFile) {
+		
+		TimesheetRecord record = getRecord(userId, weDate).get();
+		record.setSubmissionStatus(sbStats);
+		record.setApprovedAttachment(approvedFile);
+		timesheetRepository.save(record);
+	}
 	
 }
