@@ -30,12 +30,16 @@ public class RabbitConfig {
     Queue queue3(){
         return QueueBuilder.durable("Queue3").build();
     }
+    
+    Queue q1(){
+        return QueueBuilder.durable("q1").build();
+    }
 
     @Bean
     MessageListenerContainer messageListenerContainer(){
         SimpleMessageListenerContainer messageListenerContainer = new SimpleMessageListenerContainer();
         messageListenerContainer.setConnectionFactory(connectionFactory());
-        messageListenerContainer.setQueues(queue1(), queue2(), queue3());
+        messageListenerContainer.setQueues(queue1(), queue2(), queue3(),q1());
         messageListenerContainer.setMessageListener(new RabbitListener());
         return messageListenerContainer;
     }
