@@ -76,7 +76,7 @@ class Summary extends Component {
         }
 
         if(floating > 0 && vacation > 0 && holiday > 0){
-            return <p><p>{floating} floating day(s) required Popup content={"Total floating days left in " + year + ": " + floatingLeftOver + " days"} trigger={<But>!</But>} /></p>
+            return <p><p>{floating} floating day(s) required <Popup content={"Total floating days left in " + year + ": " + floatingLeftOver + " days"} trigger={<But>!</But>} /></p>
             <p>{vacation} vacation day(s) required <Popup content={"Total vacation days left in " + year + ": " + vacationLeftOver + " days"} trigger={<But>!</But>} /></p>
             <p>{holiday} holiday day(s) were included </p>
             </p>;
