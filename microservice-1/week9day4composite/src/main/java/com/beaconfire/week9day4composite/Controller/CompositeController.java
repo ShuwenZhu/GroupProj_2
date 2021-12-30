@@ -37,4 +37,12 @@ public class CompositeController {
     public ResponseEntity<UserWEDateDetailPack> getWEListDetail(@RequestHeader Map<String, String> headers, Integer userId){
         return ResponseEntity.ok().body(compositeService.getWEListDetail(headers, userId));
     }
+    
+    @GetMapping("approve")
+    public ResponseEntity<String> approve(@RequestHeader Map<String, String> headers, 
+    		Integer userId,
+    		String date,
+    		String status){
+        return ResponseEntity.ok(compositeService.approve(headers, userId, date, status));
+    }
 }

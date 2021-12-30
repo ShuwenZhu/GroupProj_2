@@ -4,6 +4,8 @@ import NavBar from '../NavBar/NavBar';
 import TimePicker from 'react-bootstrap-time-picker';
 import { TimesheetHOC } from './TimesheetHOC';
 import TimesheetService from '../../services/TimesheetService';
+import ProfileService from '../../services/ProfileService';
+import {store} from "../../redux/store";
 
 const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
@@ -28,13 +30,15 @@ class Timesheet extends Component {
             records: ["loading...", "loading..."]
           },
           userid: 1 // hard coding this because I don't know how to get this from store BEFORE constructor is called
+          file: null,
+          contact: [],
       }
   }
-  componentDidMount= () => {
-
-    console.log(this.props.user);
+  componentDidMount() {
 
     // load default timesheet for user
+    TimesheetService.fetchTimesheet(); 
+    store.subscribe(()=> ProfileService.fetchData(store.getState().user[0].id).then((response) => this.setState({ contact: response.data })));
     TimesheetService.fetchTimesheet(this.state.userid).then((d) => {
       this.setState({
         data: d,
@@ -236,10 +240,6 @@ class Timesheet extends Component {
     console.log(this.state.file);
   }
 
-  handleSetDefault = () => {
-    console.log(this.state.data.records);
-  }
-
   handleWeekEndSelect = (weekEnding) => {
     let record = null;
 
@@ -251,6 +251,8 @@ class Timesheet extends Component {
 
     this.setRecord(record);
 
+  handleSetDefault = (start, end) => {
+    ProfileService.updateSetDefault(store.getState().user[0].id, start, end);
   }
 
   handleTimesheetSubmit = () => {
@@ -377,7 +379,7 @@ class Timesheet extends Component {
         <Container>
           <Row>
             <Col>
-              <Button variant="secondary" onClick={() => this.handleSetDefault()}>
+              <Button variant="secondary" onClick={() => this.handleSetDefault(this.state.startingTimes, this.state.endingTimes)}>
                 Set Default
               </Button> 
             </Col>

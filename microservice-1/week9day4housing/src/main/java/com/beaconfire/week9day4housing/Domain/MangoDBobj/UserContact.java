@@ -41,4 +41,6 @@ public class UserContact implements Serializable{
 	public Integer usedVacationDays;
 	
 	public List<EmergencyContact> emergencyContact;
+	
+	public DefaultTimesheet defaultTimesheet;
 }

@@ -2,7 +2,7 @@ import React, { Component }  from 'react';
 import NavBar from "../NavBar/NavBar";
 import {Table} from "react-bootstrap";
 import HRService from "../../services/HRService";
-import {configureStore} from "@reduxjs/toolkit";
+import ProfileService from "../../services/ProfileService";
 
 class HRApprove extends Component {
 
@@ -36,9 +36,39 @@ class HRApprove extends Component {
         // e.preventDefault();
         console.log('approve')
         console.log(e);
-        HRService.update(e.userId, e.weekEnding, 'Approved')
-            .then(res=>console.log(res.data))
-            .catch(err=>console.log(err))
+
+        let floatCount = 0;
+        let vacationCount = 0;
+
+        for (let v = 0; v < 5; v++)
+        {
+            // console.log(e.timesheet[v])
+            if(e.timesheet[v].isFloating)
+                floatCount++;
+            if(e.timesheet[v].isVacation)
+                vacationCount++;
+        }
+        console.log("float requested: " + floatCount);
+        console.log("vacation requested: " + vacationCount);
+        ProfileService.fetchData(e.userId).then(res=>{
+            let uf = res.data.usedFloatDays + floatCount;
+            let uv = res.data.usedVacationDays + vacationCount;
+            let mf = res.data.maxFloatDays;
+            let mv = res.data.maxVacationDays;
+            if (uf > mf || uv > mv)
+            {
+                alert("Not enough remaining days, will auto reject this request");
+                this.rejectUpdate(e)
+            } else
+            {
+                HRService.update(e.userId, e.weekEnding, 'Approved')
+                    .then(res=>console.log(res.data))
+                    .catch(err=>console.log(err))
+                ProfileService.updateDateUsage(res.data.userId,
+                    uf,uv)
+            }
+        })
+
         this.removeFromLocal(e)
     }
 
@@ -99,7 +129,7 @@ class HRApprove extends Component {
                 {this.state.data &&
                 this.state.data.map(row => {
                     if (row.approvalStatus && row.approvalStatus === 'N/A')
-                    return <tr align='right'>
+                    return <tr align='right' key={row._id}>
                         <td>{row.userId}</td>
                         <td>{row.weekEnding}</td>
                         <td>{row.compensatedHour}</td>
@@ -110,6 +140,8 @@ class HRApprove extends Component {
                             <button className='btn-secondary' onClick={() => this.rejectUpdate(row)}>Reject</button>
                         </div></td>
                     </tr>
+                    else
+                        return <></>
                 })}
                 </tbody>
             </Table>
