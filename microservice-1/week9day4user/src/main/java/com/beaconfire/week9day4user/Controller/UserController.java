@@ -95,18 +95,21 @@ public class UserController {
     }
     
     @PostMapping("/changeStatSet") //for hr changing user request status
-    public ResponseMsg changeTimesheetApprovalStatus(HttpServletRequest httpServletRequest)
+    public ResponseMsg changeTimesheetApprovalStatus(
+    		@RequestParam("userId")Integer userId,
+    		@RequestParam("date") String date,
+    		@RequestParam("status") String status
+    		)
     {
-    	Integer userId = Integer.parseInt(httpServletRequest.getParameter("userId"));
-    	String date = httpServletRequest.getParameter("date");
-    	String status = httpServletRequest.getParameter("status");
     	if (status.compareToIgnoreCase("Approved")==0)
 		{
+    		System.out.println("Approving userId: " + userId + " " + date);
 		  if(timesheetService.approve(userId, date, status))
 			  return new ResponseMsg("succeed");
 		}
     	else if(status.compareToIgnoreCase("Not Approved")==0)
     	{
+    		System.out.println("Rejecting userId: " + userId + " " + date);
     		if(timesheetService.reject(userId,date,status))
     			return new ResponseMsg("succeed");
     	}
@@ -124,6 +127,15 @@ public class UserController {
     {
     	return ResponseEntity.ok(timesheetService.getRecords(userId));
     }
-
-
+    
+    @GetMapping("/updateStats")
+    public ResponseEntity<String> updateTimesheet(
+    		@RequestParam Integer userId, 
+    		@RequestParam String weDate,
+    		@RequestParam String sbStats,
+    		@RequestParam boolean approvedFile)
+    {
+    	timesheetService.updateTimesheet(userId,weDate,sbStats,approvedFile);
+    	return ResponseEntity.ok("success");
+    }
 }

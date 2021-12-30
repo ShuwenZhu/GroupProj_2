@@ -1,5 +1,6 @@
 package com.beaconfire.week9day4composite.Service;
 
+import com.beaconfire.week9day4composite.Domain.MangoDBobj.Timesheet;
 import com.beaconfire.week9day4composite.Domain.MangoDBobj.TimesheetRecord;
 import com.beaconfire.week9day4composite.Domain.MangoDBobj.UserContact;
 import com.beaconfire.week9day4composite.Domain.UserHouse;
@@ -79,6 +80,43 @@ public class CompositeService {
 //		records.add(drecord);
 //		remoteUserService.updateTimesheet(drecord);
 		return true;
+	}
+
+	public String approve(Map<String, String> headers, Integer userId, String date, String status) {
+//		Optional<UserContact> userContact = remoteHousingService.getUserContact(headers, userId).getBody();
+//		Optional<TimesheetRecord> weRecord = remoteUserService.getUserWERecord(headers, userId, date).getBody();
+//		
+//		if (userContact.isEmpty()||weRecord.isEmpty()) return "Record not match to the database";
+//		UserContact user = userContact.get();
+//		TimesheetRecord record = weRecord.get();
+//		int floatDayCount = 0, vacationDayCount = 0;
+//		for (Timesheet t : record.getTimesheet())
+//		{
+//			if(t.isFloating) floatDayCount++;
+//			if(t.isVacation) vacationDayCount++;
+//		}
+//		
+//		if (floatDayCount <= user.getMaxFloatDays() - user.getUsedFloatDays() &&
+//			vacationDayCount <= user.getMaxVacationDays() - user.getUsedVacationDays())
+//		{
+//			//update user info with new date remaining
+////			user.setUsedFloatDays(user.getUsedFloatDays() + floatDayCount);
+////			user.setUsedVacationDays(user.getUsedVacationDays() + vacationDayCount);
+////			remoteHousingService.updateUserContact(headers, user);
+//			//approve at timesheet db
+//			remoteUserService.changeTimesheetApprovalStatus(headers, userId, date, status);
+//			System.out.println("doneeeeeeeeeeeeeeeee");
+//			return "Successfully Approved!";
+//		} else
+//		{
+//			//reject at timesheet db
+//			remoteUserService.changeTimesheetApprovalStatus(headers, userId, date, "Not Approved");
+//			return "Approve operation failed: " +
+//			((floatDayCount + user.getUsedFloatDays() > user.getMaxFloatDays())? 
+//					"Not enough floating day":"Not enough vacation day");
+//		}
+		
+		return null;
 	}
 
 }
