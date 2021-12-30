@@ -56,4 +56,11 @@ public class UserContactService {
 				));
 		userContactRepository.save(user);
 	}
+
+	public void updateUserDayUsage(Integer userId, Integer floatday, Integer vacationday) {
+		UserContact user = findByUserId(userId).get();
+		user.setUsedFloatDays(floatday);
+		user.setUsedVacationDays(vacationday);
+		userContactRepository.save(user);
+	}
 }
