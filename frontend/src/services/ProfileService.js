@@ -2,6 +2,7 @@ import axios from "axios";
 
 const DATA_QUERY_API = 'http://localhost:9000/usercontact/getUserContact?'
 const STAT_UPDATE_API = 'http://localhost:9000/usercontact/updateDayUsage?'
+const DATA_UPDATE_API = 'http://localhost:9000/usercontact/updatePersonal?'
 const AVAR_UPDATE_API = 'http://localhost:9000/usercontact/uploadavatar?'
 const USER_CONTACT_UPDATE_API = 'http://localhost:9000/usercontact/update'
 
@@ -31,6 +32,25 @@ class ProfileService{
             + '&floatday=' + floatDay
             + '&vacationday=' + vacationDay
         ).then(res=>{})
+    }
+
+    updateContact(userId, phoneNumber, email, addr, em1f, em1l, em1p, em2f, em2l, em2p){
+        transport.get(DATA_UPDATE_API
+            + 'userId=' + userId
+            + 'phoneNumber=' + phoneNumber
+            + 'email=' + email
+            + 'addr=' + addr
+            + 'em1f=' + em1f
+            + 'em1l=' + em1l
+            + 'em1p=' + em1p
+            + 'em2f=' + em2f
+            + 'em2l=' + em2l
+            + 'em2p=' + em2p
+         )
+    }
+
+    uploadAvatar(files){
+
     }
 
     async updateSetDefault(user, start, end){
