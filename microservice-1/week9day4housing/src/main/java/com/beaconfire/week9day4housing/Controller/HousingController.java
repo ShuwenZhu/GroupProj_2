@@ -117,10 +117,22 @@ public class HousingController {
 		return ResponseEntity.ok("success");	
 	}
     
-    @GetMapping("/update")
-	public ResponseMsg updateUserContactGet(UserContact user)
+    @GetMapping("/updatePersonal")
+	public ResponseMsg updateUserContactGet(
+			@RequestParam Integer userId,
+			@RequestParam String phoneNumber,
+			@RequestParam String email,
+			@RequestParam String addr,
+			@RequestParam String em1f,
+			@RequestParam String em1l,
+			@RequestParam String em1p,
+			@RequestParam String em2f,
+			@RequestParam String em2l,
+			@RequestParam String em2p
+			)
 	{
-    	userContactService.UpdateUserInfo(user);
+    	userContactService.UpdateUserPersonal(userId, phoneNumber, email,
+    			addr, em1f, em1l, em1p, em2f, em2l, em2p);
     	return new ResponseMsg("success");
 	}
 }
