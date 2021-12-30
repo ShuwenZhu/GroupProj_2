@@ -29,8 +29,7 @@ class Timesheet extends Component {
           data: {
             records: ["loading...", "loading..."]
           },
-          userid: 1 // hard coding this because I don't know how to get this from store BEFORE constructor is called
-          file: null,
+          userid: 1, // hard coding this because I don't know how to get this from store BEFORE constructor is called
           contact: [],
       }
   }
@@ -250,7 +249,8 @@ class Timesheet extends Component {
     }
 
     this.setRecord(record);
-
+  }
+  
   handleSetDefault = (start, end) => {
     ProfileService.updateSetDefault(store.getState().user[0].id, start, end);
   }
