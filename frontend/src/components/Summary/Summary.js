@@ -17,6 +17,7 @@ class Summary extends Component {
             contact: [],
         }
     }
+    
     componentDidMount() {
         store.subscribe(()=> SummaryService.fetchTimesheet(store.getState().user[0].id).then((response) => this.setState({ data: response.data })));
         store.subscribe(()=> ProfileService.fetchData(store.getState().user[0].id).then((response) => this.setState({ contact: response.data })));
@@ -119,11 +120,11 @@ class Summary extends Component {
     redirectTimesheet(p){
         let original = p.weekEnding;
         let slashTo2F = original.replaceAll("/", "%2F");
-        window.location = "/timesheet?weekEnding=" + slashTo2F;
+        window.location = "/timesheet?weekEnding=" + slashTo2F + "&user=" + p.userId;
     }
 
     render() {
-        this.state.data.sort((oldDate, newDate) => new Date(...newDate.weekEnding.split('/')) - new Date(...oldDate.weekEnding.split('/')));
+        this.state.data.sort((oldDate, newDate) => new Date(...newDate.weekEnding.split('/')) + new Date(...oldDate.weekEnding.split('/')));
         return (
             <>
                 <NavBar></NavBar>

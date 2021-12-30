@@ -13,13 +13,14 @@ class Timesheet extends Component {
 
   constructor(props) {
       super(props);
+      
       this.state = {
           weekEnding: new Date("1/8/2022"),
           uploadedFormApproval: "Approved Timesheet",
           startingTimes: ["09:00:00","09:00:00","09:00:00","09:00:00","09:00:00"],
           endingTimes:   ["09:00:00","09:00:00","09:00:00","09:00:00","09:00:00"],
           floatingDays: [false, false, false, false, false],
-          holidays: [false, false, false, true, false],
+          holidays: [false, false, false, false, false],
           vacationDays: [false, false, false, false, false],
           maxFloatDays: 3,
           maxVacationDays: 3,
@@ -38,6 +39,12 @@ class Timesheet extends Component {
     // load default timesheet for user
     TimesheetService.fetchTimesheet(); 
     store.subscribe(()=> ProfileService.fetchData(store.getState().user[0].id).then((response) => this.setState({ contact: response.data })));
+    console.log(this.props);
+    if(this.props.queryParam !== null){
+      this.setState({weekEnding: new Date(this.props.queryParam)});
+    }
+    
+    // this.setState({})
     TimesheetService.fetchTimesheet(this.state.userid).then((d) => {
       this.setState({
         data: d,
