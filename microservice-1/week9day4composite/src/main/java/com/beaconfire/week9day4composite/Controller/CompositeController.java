@@ -35,9 +35,6 @@ public class CompositeController {
     
     @GetMapping("getWeekEndListWithDayInfo")
     public ResponseEntity<UserWEDateDetailPack> getWEListDetail(@RequestHeader Map<String, String> headers, Integer userId){
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Access-Control-Allow-Origin", "http://localhost:3000");
-        responseHeaders.set("Access-Control-Allow-Credentials", "true");
-        return ResponseEntity.ok().headers(responseHeaders).body(compositeService.getWEListDetail(headers, userId));
+        return ResponseEntity.ok().body(compositeService.getWEListDetail(headers, userId));
     }
 }

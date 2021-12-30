@@ -19,21 +19,69 @@ class Timesheet extends Component {
           floatingDays: [false, false, false, false, false],
           holidays: [false, false, false, true, false],
           vacationDays: [false, false, false, false, false],
+          maxFloatDays: 3,
+          maxVacationDays: 3,
+          usedVacationDays: 1,
+          usedFloatDays: 2,
           file: null,
-          data: null
+          data: {
+            records: ["loading...", "loading..."]
+          },
+          userid: 1 // hard coding this because I don't know how to get this from store BEFORE constructor is called
       }
   }
-  componentDidMount() {
+  componentDidMount= () => {
+
+    console.log(this.props.user);
 
     // load default timesheet for user
-    let data = TimesheetService.fetchTimesheet();     
-    this.setState({data: data});
+    TimesheetService.fetchTimesheet(this.state.userid).then((d) => {
+      this.setState({
+        data: d,
+        maxFloatDays: d.maxFloatDays,
+        maxVacationDays: d.maxVacationDays,
+        usedFloatDays: d.usedFloatDays,
+        usedVacationDays: d.usedVacationDays
+      });
+
+      for(let record of d.records){
+        if (record.weekEnding === this.props.queryParam){
+          this.setRecord(record);
+        }
+      }
+    })    
+  }
+
+  setRecord = (record) => {
+    console.log(this.props.user);
+    let newHolidays = [];
+    let newFloatingDays = [];
+    let newVacationDays = [];
+    let newStartingTimes = [];
+    let newEndingTimes = [];
+
+    for (let t of record.timesheet){
+      newHolidays.push(t.isHoliday);
+      newFloatingDays.push(t.isFloating);
+      newVacationDays.push(t.isVacation);
+      newStartingTimes.push(t.startTime);
+      newEndingTimes.push(t.endTime);
+    }
+
+    this.setState({
+      weekEnding: new Date(record.weekEnding),
+      holidays: newHolidays,
+      vacationDays: newVacationDays,
+      floatingDays: newFloatingDays,
+      startingTimes: newStartingTimes,
+      endingTimes: newEndingTimes
+    })
   }
 
   getTotalBillingHours = () => {
     let totalHours = 0; 
     for (let i = 0; i < 5; i++){
-      if (!(this.state.floatingDays[i] || this.state.vacationDays[i] || this.state.holidays[i])){
+      if ((!(this.state.floatingDays[i] || this.state.vacationDays[i] || this.state.holidays[i])) && this.state.endingTimes[i] !== null && this.state.startingTimes[i] !== null){
         totalHours += ((this.state.endingTimes[i].replace(/[:]/g,"") - this.state.startingTimes[i].replace(/[:]/g,"")) / 10000);
       }
     }
@@ -48,6 +96,32 @@ class Timesheet extends Component {
       }
     }
     return totalHours;
+  }
+
+  // getRemainingVacationDays = () => {
+  //   return this.state.maxVacationDays - this.state.usedVacationDays;
+  // }
+
+  // getRemainingFloatingDays = () => {
+  //   return this.state.maxFloatDays - this.state.usedFloatDays;
+  // }
+
+  getSelectedVacationDays = () =>{
+    let sum = 0;
+    for (let i = 0; i < 5; i++){
+      if (this.state.vacationDays[i])
+        sum++;
+    }
+    return sum;
+  }
+
+  getSelectedFloatingDays = () =>{
+    let sum = 0;
+    for (let i = 0; i < 5; i++){
+      if (this.state.floatingDays[i])
+        sum++;
+    }
+    return sum;
   }
 
   handleStartingTimeChange = (time, i) => {
@@ -81,6 +155,12 @@ class Timesheet extends Component {
   }
 
   toggleFloatingDay = (i) => {
+    // check if user has remaining floating day
+    if (this.state.usedFloatDays + this.getSelectedFloatingDays() + 1 > this.state.maxFloatDays && !this.state.floatingDays[i]){
+      alert("no remaining floating days");
+      return;
+    }
+
     // check if it is a holiday
     if (this.state.holidays[i])
       return;
@@ -107,7 +187,13 @@ class Timesheet extends Component {
     }
   }
 
-  toggleVacationDay = (i) => {    
+  toggleVacationDay = (i) => {  
+    // check if remaining vacation days
+    if (this.state.usedVacationDays + this.getSelectedVacationDays() + 1 > this.state.maxVacationDays && !this.state.vacationDays[i]){
+      alert("no remaining vacation days");
+      return;
+    }
+
     // check if it is a holiday
     if (this.state.holidays[i])
       return;
@@ -122,7 +208,7 @@ class Timesheet extends Component {
       this.setState({vacationDays});
     }
 
-    // if off, toggle on and toggle vacation day off
+    // if off, toggle on and toggle float day off
     else{
       let vacationDays = [...this.state.vacationDays];
       vacationDays[i] = true; 
@@ -151,13 +237,26 @@ class Timesheet extends Component {
   }
 
   handleSetDefault = () => {
-    console.log(this.state.data);
+    console.log(this.state.data.records);
+  }
+
+  handleWeekEndSelect = (weekEnding) => {
+    let record = null;
+
+    for (let r of this.state.data.records){
+      if (r.weekEnding === weekEnding){
+        record = r;
+      }
+    }
+
+    this.setRecord(record);
+
   }
 
   handleTimesheetSubmit = () => {
     let sheet = {
       _id: null,
-      userId: this.props.userlist[0].id,
+      userId: this.props.user.id,
       weekEnding: this.state.weekEnding,
       billingHour: this.getTotalBillingHours(),
       compensatedHour: this.getTotalCompensatedHours(),
@@ -170,7 +269,7 @@ class Timesheet extends Component {
 
     for(let i = 0; i < 5; i++){
       sheet.timesheet.push({
-        date: new Date(new Date(this.state.weekEnding).setDate(this.state.weekEnding.getDate() - 5 + i)),
+        date: new Date(new Date(this.state.weekEnding).setDate(this.state.weekEnding.getDate() - 5 + i)).toLocaleDateString(),
         startTime: this.state.startingTimes[i],
         endTime: this.state.endingTimes[i],
         isFloating: this.state.floatingDays[i],
@@ -182,6 +281,14 @@ class Timesheet extends Component {
     for(let i = 0; i < 5; i++){
       console.log(sheet.timesheet[i].date);
     }
+
+    let approved = false;
+    if (this.state.uploadedFormApproval === "Approved Timesheet")
+      approved = true;  
+
+    TimesheetService.updateStatus(this.state.userid, this.state.weekEnding.toLocaleDateString().replace("/", "%2F").replace("/", "%2F"), "Complete", approved);
+
+    TimesheetService.sendTimesheet(sheet);
     
   }
 
@@ -192,7 +299,17 @@ class Timesheet extends Component {
         <div className="container">
           <div className="row">
             <div className="col-sm">
-              Week Ending {this.state.weekEnding.toLocaleDateString()}
+              Week Ending
+              <DropdownButton
+                title={this.state.weekEnding.toLocaleDateString()}
+                variant="primary"
+                value={this.state.weekEnding}
+                onSelect={(e) => this.handleWeekEndSelect(e)}>   
+                {this.state.data.records.map((record, index) => (
+                  <Dropdown.Item eventKey={this.state.data.records[index].weekEnding}>{this.state.data.records[index].weekEnding}</Dropdown.Item>
+
+                ))}    
+              </DropdownButton>
             </div>
             <div className="col-sm">
               Total Billing Hours {this.getTotalBillingHours()}
@@ -201,7 +318,19 @@ class Timesheet extends Component {
               Total Compensated Hours {this.getTotalCompensatedHours()}
             </div>
           </div>
-        </div>       
+        </div>
+        <Container>
+          <Row>
+            <Col>
+            </Col>
+            <Col>
+              Remaining Vacation Days {this.state.maxVacationDays - this.getSelectedVacationDays() - this.state.usedVacationDays}
+            </Col>
+            <Col>
+              Remaining Floating Days {this.state.maxFloatDays - this.getSelectedFloatingDays() - this.state.usedFloatDays}
+            </Col>
+          </Row>
+        </Container>     
         <Table striped bordered hover size="sm">
           <thead>
             <tr>
@@ -237,8 +366,8 @@ class Timesheet extends Component {
                     ? <>{((this.state.endingTimes[index].replace(/[:]/g,"") - this.state.startingTimes[index].replace(/[:]/g,""))) / 10000}</>
                     : <>N/A</>
                   }</td>
-                <td><Button variant="outline-secondary" onClick={() => this.toggleFloatingDay(index)}>{(this.state.floatingDays[index]) ? "X" : "-"}</Button></td>
-                <td><Button variant="outline-secondary" onClick={() => this.toggleVacationDay(index)}>{(this.state.vacationDays[index]) ? "X" : "-"}</Button></td>
+                <td><Button variant="outline-secondary" disabled={this.state.holidays[index]} onClick={() => this.toggleFloatingDay(index)}>{(this.state.floatingDays[index]) ? "X" : "-"}</Button></td>
+                <td><Button variant="outline-secondary" disabled={this.state.holidays[index]} onClick={() => this.toggleVacationDay(index)}>{(this.state.vacationDays[index]) ? "X" : "-"}</Button></td>
                 <td><Button variant="outline-secondary">{(this.state.holidays[index]) ? "X" : "-"}</Button></td>
               </tr>
             ))}
